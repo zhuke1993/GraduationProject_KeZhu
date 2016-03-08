@@ -11,6 +11,8 @@
     <modules>
         <module>core</module>
         <module>web</module>
+        <module>data</module>
+        <module>sh_simulation</module>
     </modules>
 
     <properties>
@@ -23,11 +25,6 @@
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>tw.edu.ntu.csie</groupId>
-            <artifactId>libsvm</artifactId>
-            <version>3.17</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>

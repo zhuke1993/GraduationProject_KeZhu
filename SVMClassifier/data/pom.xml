@@ -7,10 +7,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>core</artifactId>
+    <artifactId>data</artifactId>
     <packaging>jar</packaging>
 
-    <name>core</name>
+    <name>data</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -23,11 +23,6 @@
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>tw.edu.ntu.csie</groupId>
-            <artifactId>libsvm</artifactId>
-            <version>3.17</version>
         </dependency>
     </dependencies>
 </project>
