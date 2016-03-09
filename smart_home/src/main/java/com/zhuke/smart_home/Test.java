@@ -1,6 +1,6 @@
 package com.zhuke.smart_home;
 
-import com.zhuke.smart_home.beans.Users;
+import com.zhuke.smart_home.beans.Message;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -10,7 +10,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class Test {
     public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext("classpath:ApplicationContext.xml");
-        Users users = context.getBean(Users.class);
+        Message users = context.getBean(Message.class);
         users.setName("朱轲");
         System.out.println(users.getName());
     }
