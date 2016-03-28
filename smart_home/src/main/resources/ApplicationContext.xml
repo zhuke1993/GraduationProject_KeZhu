@@ -79,6 +79,7 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
+
     <!--配置事务的传播特性-->
     <tx:advice id="txAdvice" transaction-manager="hibernateTransactionManager">
         <tx:attributes>
