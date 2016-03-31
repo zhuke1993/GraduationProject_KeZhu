@@ -31,7 +31,7 @@ public class ServerConnServiceImpl implements ServerConnService, Runnable {
         try {
             Selector selector = Selector.open();
             server = ServerSocketChannel.open();
-            server.bind(new InetSocketAddress(8888));
+            server.bind(new InetSocketAddress(8999));
             server.configureBlocking(false);
             server.register(selector, SelectionKey.OP_ACCEPT);
             logger.info("Server started, waiting for new connection.");
@@ -50,12 +50,17 @@ public class ServerConnServiceImpl implements ServerConnService, Runnable {
                             serverChanel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
                         }
 
-                        if (key.isReadable()) {
-                            SocketChannel serverChanel = (SocketChannel) key.channel();
-                            ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-                            serverChanel.read(byteBuffer);
-                            byteBuffer.clear();
-                            logger.info("Received a new message:" + new String(byteBuffer.array()));
+                        try {
+                            if (key.isReadable()) {
+                                SocketChannel serverChanel = (SocketChannel) key.channel();
+                                ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+                                serverChanel.read(byteBuffer);
+                                byteBuffer.clear();
+                                logger.info("Received a new message:" + new String(byteBuffer.array()));
+                            }
+                        } catch (IOException e) {
+                            logger.error("Sever occured a error", e);
+                            key.cancel();
                         }
                     }
                 }
