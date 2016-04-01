@@ -105,8 +105,8 @@
 
     <!--线程池管理-->
     <bean id="threadPoolExecutor" class="java.util.concurrent.ThreadPoolExecutor">
-        <constructor-arg type="int" value="4"/>
-        <constructor-arg type="int" value="4"/>
+        <constructor-arg type="int" value="3"/>
+        <constructor-arg type="int" value="6"/>
         <constructor-arg type="long" value="6000"/>
         <constructor-arg type="java.util.concurrent.TimeUnit" value="MILLISECONDS"/>
         <constructor-arg ref="workQueue"/>

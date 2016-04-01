@@ -17,6 +17,8 @@ public class DataRecordServiceImpl implements DataRecordService {
 
     public void dataRecieve() {
 
+        logger.info(".........数据记录线程已启动........");
+
         String acc = null;
         // 工作主要状态，需要通过蓝牙定时向蓝牙发送数据r，得到蓝牙返回回来的该状态的状态属性
         // TODO: 2016/3/31  

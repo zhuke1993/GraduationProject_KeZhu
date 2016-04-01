@@ -4,6 +4,7 @@ import com.zhuke.svmclassifier.service.DataRecordService;
 import com.zhuke.svmclassifier.service.LearningService;
 import com.zhuke.svmclassifier.service.PredictService;
 import com.zhuke.svmclassifier.service.SVMConfig;
+import com.zhuke.svmclassifier.service.impl.LearningServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -49,7 +50,7 @@ public class SVMController {
 
     @RequestMapping("/predict/stop.do")
     public void stopPredict(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        threadPoolExecutor.shutdownNow();
+        SVMConfig.IS_PREDICTING = 0;
         response.getWriter().print("终止预测成功");
     }
 
@@ -57,10 +58,11 @@ public class SVMController {
     @RequestMapping("/learning.do")
     public void learning(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletRequestBindingException {
         String lable = ServletRequestUtils.getStringParameter(request, "lable");
-       /* learningService.setLable(lable);
+        ((LearningServiceImpl) learningService).setLable(lable);
+
         learningService.learning();
         threadPoolExecutor.execute(learningService);
-*/
+
         response.getWriter().print("OK");
     }
 

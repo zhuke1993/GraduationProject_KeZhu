@@ -16,8 +16,10 @@ public class DeviceStatus {
     @Column
     @Id
     private Long id;
+
     @Column
     private String code;
+
     @Column
     private String value;
 

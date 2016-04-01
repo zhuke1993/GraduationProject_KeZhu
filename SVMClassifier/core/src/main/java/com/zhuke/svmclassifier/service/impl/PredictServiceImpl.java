@@ -15,17 +15,16 @@ import org.springframework.stereotype.Service;
  * @author ZHUKE
  */
 @Service
-public class PredictServiceImpl implements PredictService{
+public class PredictServiceImpl implements PredictService {
     private Logger logger = LogManager.getLogger(PredictServiceImpl.class);
 
     @Autowired
     private MessageSendService messageSendService;
 
     public void predict() {
-        Thread th = null;
         logger.info("..........预测线程已启动..........");
 
-        while (true) {
+        while (SVMConfig.IS_PREDICTING == 1) {
             // 从缓存数组中取出相应的行，进行预测
             for (int i = (SVMConfig.TEMP_STATE - SVMConfig.L), j = 0; i < (SVMConfig.TEMP_STATE - SVMConfig.R); i++, j++) {
                 SVMConfig.TO_PERDICT[j] = SVMConfig.ACTION_TEMP[i + 20 + 1];
