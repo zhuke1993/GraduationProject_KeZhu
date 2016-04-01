@@ -14,11 +14,10 @@
     <script type="text/javascript">
         function startPredict() {
             jQuery.ajax({
-                url: '/core/predict/start.do',
+                url: '/predict/start.do',
                 type: 'post',
                 dataType: 'text',
-                data: {
-                },
+                data: {},
                 success: function (data) {
                     alert(data);
                 }
@@ -27,10 +26,23 @@
 
         function stopPredict() {
             jQuery.ajax({
-                url: '/core/predict/stop.do',
+                url: '/predict/stop.do',
+                type: 'post',
+                dataType: 'text',
+                data: {},
+                success: function (data) {
+                    alert(data);
+                }
+            });
+        }
+
+        function learning(lable) {
+            jQuery.ajax({
+                url: '/learning.do',
                 type: 'post',
                 dataType: 'text',
                 data: {
+                    'lable': lable
                 },
                 success: function (data) {
                     alert(data);
@@ -44,16 +56,17 @@
 <body>
 
 <button style="width:200px;length:200px" onclick="startPredict()">开始预测</button>
+<br><br>
 <button style="width:200px;length:200px" onclick="stopPredict()">终止预测</button>
 <br><br>
 <p>学习列表：</p>
-<button style="width:200px;length:200px">电灯1：开灯</button>
+<button style="width:200px;length:200px" onclick="learning(1)">电灯1：开灯</button>
 <br><br>
-<button style="width:200px;length:200px">电灯1：灭灯</button>
+<button style="width:200px;length:200px" onclick="learning(2)">电灯1：灭灯</button>
 <br><br>
-<button style="width:200px;length:200px">电视1：开启</button>
+<button style="width:200px;length:200px" onclick="learning(3)">电视1：开启</button>
 <br><br>
-<button style="width:200px;length:200px">电视1：关闭</button>
+<button style="width:200px;length:200px" onclick="learning(4)">电视1：关闭</button>
 <br><br>
 <button style="width:200px;length:200px">电视1：频道+</button>
 <br><br>

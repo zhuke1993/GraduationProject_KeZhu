@@ -1,8 +1,9 @@
 package com.zhuke.svmclassifier.controller;
 
-import com.zhuke.svmclassifier.core.DataRecordService;
-import com.zhuke.svmclassifier.core.LearningService;
-import com.zhuke.svmclassifier.core.PredictService;
+import com.zhuke.svmclassifier.service.DataRecordService;
+import com.zhuke.svmclassifier.service.LearningService;
+import com.zhuke.svmclassifier.service.PredictService;
+import com.zhuke.svmclassifier.service.SVMConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -32,27 +33,34 @@ public class SVMController {
     @Autowired
     private ThreadPoolExecutor threadPoolExecutor;
 
-    @RequestMapping("/core/predict/start.do")
+    @RequestMapping("/predict/start.do")
     public void startPredict(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        threadPoolExecutor.execute(dataRecordService);
-        threadPoolExecutor.execute(learningService);
-        threadPoolExecutor.execute(predictService);
-        response.getWriter().print("开始预测成功");
+
+        if (SVMConfig.IS_PREDICTING == 0) {
+            threadPoolExecutor.execute(dataRecordService);
+            threadPoolExecutor.execute(predictService);
+            SVMConfig.IS_PREDICTING = 1;
+            response.getWriter().print("预测服务开启成功。");
+        } else {
+            response.getWriter().print("预测服务正在运行中，无需重复启动。");
+        }
+
     }
 
-    @RequestMapping("/core/predict/stop.do")
+    @RequestMapping("/predict/stop.do")
     public void stopPredict(HttpServletRequest request, HttpServletResponse response) throws IOException {
         threadPoolExecutor.shutdownNow();
         response.getWriter().print("终止预测成功");
     }
 
 
-    @RequestMapping("/core/learning.do")
+    @RequestMapping("/learning.do")
     public void learning(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletRequestBindingException {
         String lable = ServletRequestUtils.getStringParameter(request, "lable");
-        learningService.setLable(lable);
+       /* learningService.setLable(lable);
         learningService.learning();
-
+        threadPoolExecutor.execute(learningService);
+*/
         response.getWriter().print("OK");
     }
 

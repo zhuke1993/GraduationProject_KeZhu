@@ -3,6 +3,7 @@ package com.zhuke.svmclassifier.entity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * 动作数据
@@ -21,6 +22,20 @@ public class ActionRecord {
      */
     @Column
     private String action;
+
+    @Column(name = "created_on")
+    private Date createdOn;
+
+    @Column(name = "user_id")
+    private Long userId;
+
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
 
     public Long getId() {
         return id;
