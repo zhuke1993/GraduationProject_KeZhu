@@ -1,6 +1,5 @@
 package com.zhuke.svmclassifier.core;
 
-import libsvm.svm;
 import libsvm.svm_node;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -49,8 +48,7 @@ public class PredictService implements Runnable {
             double result = 1.0000;
 
             // 向局域网内的所有的家电广播得到的结果值
-            messageSendService.setMessage(String.valueOf(result));
-            messageSendService.sendMessage();
+            messageSendService.sendMessage(String.valueOf(result));
             try {
                 Thread.sleep(SVMConfig.PREDICT_TIME);
             } catch (InterruptedException e) {

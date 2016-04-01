@@ -16,75 +16,41 @@ import java.util.Iterator;
  * Created by ZHUKE on 2016/3/31.
  */
 @Service
-public class MessageSendService implements Runnable {
+public class MessageSendService {
 
     private Logger logger = LogManager.getLogger(MessageSendService.class);
 
     public static Selector selector;
     public static SocketChannel socketChannel;
-    private String message;
 
-    public void sendMessage() {
-        Assert.notNull(selector);
-        Assert.notNull(socketChannel);
-        Assert.notNull(message);
+    public void sendMessage(String message) {
 
         try {
-            while (true) {
-                if (selector.select() > 0) {
-                    Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
-                    while (iterator.hasNext()) {
-                        SelectionKey key = iterator.next();
-                        iterator.remove();
-                        if (key.isWritable()) {
-                            ByteBuffer byteBuffer = ByteBuffer.allocate(512);
-                            byteBuffer.put(message.getBytes());
-                            byteBuffer.flip();
-                            socketChannel.write(byteBuffer);
-                            logger.info("Send a message to server, message = " + message);
-                        }
+            Assert.notNull(selector);
+            Assert.notNull(socketChannel);
+            Assert.notNull(message);
+        } catch (Exception e) {
+            logger.error("向服务器发送消息时异常，未连接到服务器", e);
+            ServerConnService.getServerConn();
+        }
+
+        try {
+            if (selector.select() > 0) {
+                Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
+                while (iterator.hasNext()) {
+                    SelectionKey key = iterator.next();
+                    iterator.remove();
+                    if (key.isWritable()) {
+                        ByteBuffer byteBuffer = ByteBuffer.allocate(512);
+                        byteBuffer.put(message.getBytes());
+                        byteBuffer.flip();
+                        socketChannel.write(byteBuffer);
+                        logger.info("已发送一条消息至服务器，内容 = " + message);
                     }
                 }
             }
         } catch (IOException e) {
             logger.error("Occured a error." + e);
         }
-    }
-
-    public void run() {
-        sendMessage();
-    }
-
-
-    public Logger getLogger() {
-        return logger;
-    }
-
-    public void setLogger(Logger logger) {
-        this.logger = logger;
-    }
-
-    public Selector getSelector() {
-        return selector;
-    }
-
-    public void setSelector(Selector selector) {
-        this.selector = selector;
-    }
-
-    public SocketChannel getSocketChannel() {
-        return socketChannel;
-    }
-
-    public void setSocketChannel(SocketChannel socketChannel) {
-        this.socketChannel = socketChannel;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }
