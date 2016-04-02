@@ -25,9 +25,11 @@ public class CentralControl implements Runnable {
 
     public void run() {
         //不断解析收到的控制报文
-        while (SHConfig.messageVector.size() > 0) {
-            messageService.broadcastMessage(SHConfig.messageVector.get(0));
-            SHConfig.messageVector.remove(0);
+        while (true) {
+            if (SHConfig.messageVector.size() > 0) {
+                messageService.broadcastMessage(SHConfig.messageVector.get(0));
+                SHConfig.messageVector.remove(0);
+            }
         }
     }
 }

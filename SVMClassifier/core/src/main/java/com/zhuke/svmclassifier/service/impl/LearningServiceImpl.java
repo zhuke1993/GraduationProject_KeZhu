@@ -42,7 +42,7 @@ public class LearningServiceImpl implements LearningService {
         this.lable = lable;
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public void learning() {
 
         Assert.notNull(lable);

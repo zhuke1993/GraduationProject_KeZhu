@@ -64,7 +64,7 @@ public class ServerConnServiceImpl implements ServerConnService {
                                 serverChanel.read(byteBuffer);
                                 byteBuffer.flip();
                                 logger.info("收到客户端：" + ((SocketChannel) key.channel()).socket().getRemoteSocketAddress() +
-                                        "的消息" + new String(byteBuffer.array()));
+                                        "的消息：" + new String(byteBuffer.array()));
                                 SHMessage message = messageService.parseMessage(new String(byteBuffer.array(), 0, byteBuffer.limit()));
                                 SHConfig.messageVector.add(message);
                             }

@@ -1,5 +1,6 @@
 package com.zhuke.smart_home;
 
+import com.google.gson.Gson;
 import com.zhuke.smart_home.beans.Device;
 import com.zhuke.smart_home.service.DeviceService;
 import com.zhuke.smart_home.service.impl.DeviceServiceImpl;
@@ -10,6 +11,7 @@ import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -22,7 +24,13 @@ public class DeviceServiceTest extends DefaultSpringTestCase {
 
     @Test
     public void initDeviceStatus() {
-
+        ArrayList<Device> devices = (ArrayList<Device>) hibernateTemplate.find("from Device d", null);
+        for (int i = 0; i < devices.size(); i++) {
+            devices.get(i).setDeviceStatus("closed");
+        }
+        Gson gson = new Gson();
+        System.out.println(gson.toJson(devices));
+        ;
     }
 
     @Test

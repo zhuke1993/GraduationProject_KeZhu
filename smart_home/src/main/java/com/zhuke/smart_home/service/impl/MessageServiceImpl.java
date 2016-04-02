@@ -51,7 +51,7 @@ public class MessageServiceImpl implements MessageService {
      */
     public void broadcastMessage(SHMessage message) {
         for (int i = 0; i < SHConfig.deviceVector.size(); i++) {
-            if (SHConfig.deviceVector.get(i).getDeviceId() == message.getToSdId()) {
+            if (SHConfig.deviceVector.get(i).getId().compareTo(message.getToSdId()) == 0) {
                 deviceService.updateDeviceStatus(SHConfig.deviceVector.get(i), hibernateTemplate.get(DeviceStatus.class, message.getStatusId()));
                 logger.info("接收到控制消息," + message.toString());
             }

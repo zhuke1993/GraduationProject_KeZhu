@@ -9,8 +9,9 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>svm动作分类器</title>
+    <title>svm动作分类器模拟学习</title>
     <script type="text/javascript" src="js/jquery-2.2.2.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/sh.css">
     <script type="text/javascript">
         function startPredict() {
             jQuery.ajax({
@@ -54,28 +55,28 @@
     </script>
 </head>
 <body>
+<div style="width: 320px; height: 500px">
+    <h3>控制选项</h3>
+    <button class="button blue " onclick="startPredict()">开始预测</button>
+    <br><br>
+    <button class="button blue" onclick="stopPredict()">终止预测</button>
+    <br><br>
+    <h3>学习列表：</h3>
+    <button class="button blue" onclick="learning('001001001')">电灯1：开灯</button>
+    <br><br>
+    <button class="button blue" onclick="learning('001001002')">电灯1：灭灯</button>
+    <br><br>
+    <button class="button blue" onclick="learning('001002001')">电灯2：开灯</button>
+    <br><br>
+    <button class="button blue" onclick="learning('001002002')">电灯2：灭灯</button>
+    <br><br>
+    <button class="button blue" onclick="learning('001003001')">电视1：开启</button>
+    <br><br>
+    <button class="button blue" onclick="learning('001003002')">电视1：关闭</button>
+    <br><br>
+    <br><br>
+</div>
 
-<button style="width:200px;length:200px" onclick="startPredict()">开始预测</button>
-<br><br>
-<button style="width:200px;length:200px" onclick="stopPredict()">终止预测</button>
-<br><br>
-<p>学习列表：</p>
-<button style="width:200px;length:200px" onclick="learning(1)">电灯1：开灯</button>
-<br><br>
-<button style="width:200px;length:200px" onclick="learning(2)">电灯1：灭灯</button>
-<br><br>
-<button style="width:200px;length:200px" onclick="learning(3)">电视1：开启</button>
-<br><br>
-<button style="width:200px;length:200px" onclick="learning(4)">电视1：关闭</button>
-<br><br>
-<button style="width:200px;length:200px">电视1：频道+</button>
-<br><br>
-<button style="width:200px;length:200px">电视1：频道-</button>
-<br><br>
-<button style="width:200px;length:200px">电视1：音量+</button>
-<br><br>
-<button style="width:200px;length:200px">电视1：音量-</button>
-<br><br>
 </body>
 
 

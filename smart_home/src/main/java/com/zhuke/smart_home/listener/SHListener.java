@@ -1,5 +1,6 @@
 package com.zhuke.smart_home.listener;
 
+import com.zhuke.smart_home.central.CentralControl;
 import com.zhuke.smart_home.service.DeviceService;
 import com.zhuke.smart_home.service.ServerConnService;
 import org.apache.log4j.LogManager;
@@ -23,8 +24,12 @@ public class SHListener extends ContextLoaderListener {
             ApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(event.getServletContext());
 
             ServerConnService serverConnService = applicationContext.getBean(ServerConnService.class);
+
+            CentralControl centralControl = applicationContext.getBean(CentralControl.class);
+
             ThreadPoolExecutor threadPoolExecutor = applicationContext.getBean(ThreadPoolExecutor.class);
             threadPoolExecutor.execute(serverConnService);
+            threadPoolExecutor.execute(centralControl);
 
             DeviceService deviceService = applicationContext.getBean(DeviceService.class);
             deviceService.initDeviceStatus();
