@@ -1,15 +1,12 @@
 package com.zhuke.smart_home.beans;
 
-import org.springframework.stereotype.Component;
-
 import java.util.Date;
 
 /**
  * 控制信息报文
  * Created by ZHUKE on 2016/3/8.
  */
-@Component
-public class Message {
+public class SHMessage {
     private Long id;
     private Long fromSdId;
     private Long toSdId;
@@ -66,5 +63,17 @@ public class Message {
 
     public void setSendDate(Date sendDate) {
         this.sendDate = sendDate;
+    }
+
+    @Override
+    public String toString() {
+        return "SHMessage{" +
+                "id=" + id +
+                ", fromSdId=" + fromSdId +
+                ", toSdId=" + toSdId +
+                ", statusId=" + statusId +
+                ", sendDate=" + sendDate +
+                ", type='" + type + '\'' +
+                '}';
     }
 }

@@ -1,9 +1,9 @@
 package com.zhuke.smart_home.beans;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * 设备状态
@@ -13,8 +13,9 @@ import javax.persistence.Table;
 @Table(name = "device_status")
 public class DeviceStatus {
 
-    @Column
     @Id
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
     private Long id;
 
     @Column
@@ -22,6 +23,12 @@ public class DeviceStatus {
 
     @Column
     private String value;
+
+    @Column(name = "created_on")
+    private Date createdOn;
+
+    @Column(name = "modified_on")
+    private Date modifiedOn;
 
     public DeviceStatus(Long id, String code, String value) {
         this.id = id;
@@ -57,12 +64,19 @@ public class DeviceStatus {
         this.value = value;
     }
 
-    @Override
-    public String toString() {
-        return "DeviceStatus{" +
-                "id=" + id +
-                ", code='" + code + '\'' +
-                ", value='" + value + '\'' +
-                '}';
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public Date getModifiedOn() {
+        return modifiedOn;
+    }
+
+    public void setModifiedOn(Date modifiedOn) {
+        this.modifiedOn = modifiedOn;
     }
 }

@@ -1,17 +1,22 @@
 package com.zhuke.smart_home.beans;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by ZHUKE on 2016/3/14.
  */
 @Entity
 public class Device {
-    @Column
     @Id
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
     private Long id;
     @Column
     private Long deviceId;
@@ -29,8 +34,13 @@ public class Device {
     @Column
     private String uuid;
 
-    @Column
-    private Long deviceStatusId;
+    @Column(name = "created_on")
+    private Date createdOn;
+
+    @Column(name = "modified_on")
+    private Date modifiedOn;
+
+    private String deviceStatus;
 
     public String getDeviceType() {
         return deviceType;
@@ -64,12 +74,12 @@ public class Device {
         this.joinDate = joinDate;
     }
 
-    public Long getDeviceStatusId() {
-        return deviceStatusId;
+    public String getDeviceStatus() {
+        return deviceStatus;
     }
 
-    public void setDeviceStatusId(Long deviceStatusId) {
-        this.deviceStatusId = deviceStatusId;
+    public void setDeviceStatus(String deviceStatus) {
+        this.deviceStatus = deviceStatus;
     }
 
     public Long getId() {
@@ -96,4 +106,19 @@ public class Device {
         this.ownerId = ownerId;
     }
 
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public Date getModifiedOn() {
+        return modifiedOn;
+    }
+
+    public void setModifiedOn(Date modifiedOn) {
+        this.modifiedOn = modifiedOn;
+    }
 }

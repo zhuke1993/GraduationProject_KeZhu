@@ -1,48 +1,33 @@
 package com.zhuke.smart_home.central;
 
-import com.zhuke.smart_home.beans.Device;
-import com.zhuke.smart_home.beans.Message;
-import com.zhuke.smart_home.enumtype.MessageType;
+import com.zhuke.smart_home.service.DeviceService;
+import com.zhuke.smart_home.service.MessageService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Controller;
-
-import java.util.concurrent.CopyOnWriteArrayList;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate5.HibernateTemplate;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by ZHUKE on 2016/3/14.
  */
-@Controller
-public class CentralControl {
+@Service
+public class CentralControl implements Runnable {
 
     private Logger logger = LogManager.getLogger(CentralControl.class);
 
-    private CopyOnWriteArrayList<Device> smartDeviceList = new CopyOnWriteArrayList<Device>();
+    @Autowired
+    private DeviceService deviceService;
 
-    public void broadcastMessage(Message message) {
-        for (int i = 0; i < smartDeviceList.size(); i++) {
-            if (smartDeviceList.get(i).getDeviceId() == message.getToSdId()
-                    && message.getType().equals(MessageType.PREDICT.getMessageType())) {
-               //todo smartDeviceList.get(i).update(message);
-            }
+    @Autowired
+    private MessageService messageService;
+
+
+    public void run() {
+        //不断解析收到的控制报文
+        while (SHConfig.messageVector.size() > 0) {
+            messageService.broadcastMessage(SHConfig.messageVector.get(0));
+            SHConfig.messageVector.remove(0);
         }
     }
-
-    public void learning() {
-        //// TODO: 2016/3/15
-
-    }
-
-    public void registerDevice(Device device) {
-        smartDeviceList.add(device);
-    }
-
-    public void deleteDevice(Device device) {
-        for (int i = 0; i < smartDeviceList.size(); i++) {
-            if (smartDeviceList.get(i).getDeviceId() == device.getDeviceId()) {
-                smartDeviceList.remove(i);
-            }
-        }
-    }
-
 }

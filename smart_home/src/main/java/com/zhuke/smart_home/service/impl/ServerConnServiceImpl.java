@@ -1,8 +1,12 @@
 package com.zhuke.smart_home.service.impl;
 
+import com.zhuke.smart_home.beans.SHMessage;
+import com.zhuke.smart_home.central.SHConfig;
+import com.zhuke.smart_home.service.MessageService;
 import com.zhuke.smart_home.service.ServerConnService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,8 +23,11 @@ import java.util.Set;
  * Created by ZHUKE on 2016/3/12.
  */
 @Service
-public class ServerConnServiceImpl implements ServerConnService, Runnable {
+public class ServerConnServiceImpl implements ServerConnService {
     Logger logger = LogManager.getLogger(ServerConnService.class);
+
+    @Autowired
+    private MessageService messageService;
 
     public static void main(String[] args) {
         new ServerConnServiceImpl().startServer();
@@ -34,7 +41,7 @@ public class ServerConnServiceImpl implements ServerConnService, Runnable {
             server.bind(new InetSocketAddress(8999));
             server.configureBlocking(false);
             server.register(selector, SelectionKey.OP_ACCEPT);
-            logger.info("Server started, waiting for new connection.");
+            logger.info("......服务器启动成功，等待客户端连接......");
             while (true) {
                 if (selector.select() > 0) {
                     Set<SelectionKey> set = selector.selectedKeys();
@@ -45,7 +52,7 @@ public class ServerConnServiceImpl implements ServerConnService, Runnable {
 
                         if (key.isAcceptable()) {
                             SocketChannel serverChanel = server.accept();
-                            logger.info("A new client was connected , address:" + serverChanel.socket().getRemoteSocketAddress());
+                            logger.info("收到一个新连接:" + serverChanel.socket().getRemoteSocketAddress());
                             serverChanel.configureBlocking(false);
                             serverChanel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
                         }
@@ -55,8 +62,11 @@ public class ServerConnServiceImpl implements ServerConnService, Runnable {
                                 SocketChannel serverChanel = (SocketChannel) key.channel();
                                 ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
                                 serverChanel.read(byteBuffer);
-                                byteBuffer.clear();
-                                logger.info("Received a new message:" + new String(byteBuffer.array()));
+                                byteBuffer.flip();
+                                logger.info("收到客户端：" + ((SocketChannel) key.channel()).socket().getRemoteSocketAddress() +
+                                        "的消息" + new String(byteBuffer.array()));
+                                SHMessage message = messageService.parseMessage(new String(byteBuffer.array(), 0, byteBuffer.limit()));
+                                SHConfig.messageVector.add(message);
                             }
                         } catch (IOException e) {
                             logger.error("Sever occured a error", e);

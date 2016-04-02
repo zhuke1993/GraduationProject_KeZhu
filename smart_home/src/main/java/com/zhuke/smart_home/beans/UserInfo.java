@@ -1,9 +1,9 @@
 package com.zhuke.smart_home.beans;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by ZHUKE on 2016/3/14.
@@ -12,6 +12,8 @@ import javax.persistence.Table;
 @Table(name = "user_info")
 public class UserInfo {
     @Id
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
     private Long id;
 
     @Column(name = "user_name")
@@ -22,6 +24,12 @@ public class UserInfo {
 
     @Column
     private String email;
+
+    @Column(name = "created_on")
+    private Date createdOn;
+
+    @Column(name = "modified_on")
+    private Date modifiedOn;
 
     public Long getId() {
         return id;
@@ -60,6 +68,23 @@ public class UserInfo {
         this.userName = userName;
         this.password = password;
         this.email = email;
+    }
+
+
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public Date getModifiedOn() {
+        return modifiedOn;
+    }
+
+    public void setModifiedOn(Date modifiedOn) {
+        this.modifiedOn = modifiedOn;
     }
 
     public UserInfo() {

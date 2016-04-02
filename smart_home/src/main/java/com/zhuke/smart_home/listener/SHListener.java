@@ -1,9 +1,7 @@
 package com.zhuke.smart_home.listener;
 
-import com.google.common.base.Stopwatch;
 import com.zhuke.smart_home.service.DeviceService;
-import com.zhuke.smart_home.service.impl.DeviceServiceImpl;
-import com.zhuke.smart_home.service.impl.ServerConnServiceImpl;
+import com.zhuke.smart_home.service.ServerConnService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -11,7 +9,6 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by ZHUKE on 2016/3/8.
@@ -25,12 +22,13 @@ public class SHListener extends ContextLoaderListener {
             super.contextInitialized(event);
             ApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(event.getServletContext());
 
-            ServerConnServiceImpl serverConnService = applicationContext.getBean(ServerConnServiceImpl.class);
+            ServerConnService serverConnService = applicationContext.getBean(ServerConnService.class);
             ThreadPoolExecutor threadPoolExecutor = applicationContext.getBean(ThreadPoolExecutor.class);
             threadPoolExecutor.execute(serverConnService);
 
-            DeviceService deviceStatusInitService = applicationContext.getBean(DeviceService.class);
-            deviceStatusInitService.initDeviceStatus();
+            DeviceService deviceService = applicationContext.getBean(DeviceService.class);
+            deviceService.initDeviceStatus();
+            deviceService.initBindsDevice();
 
         } catch (Exception e) {
             logger.error("Start server occured exception", e);
