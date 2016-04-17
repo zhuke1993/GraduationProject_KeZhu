@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -31,15 +34,11 @@ public class SVMController {
     @Autowired
     private PredictService predictService;
 
-    @Autowired
-    private ThreadPoolExecutor threadPoolExecutor;
-
     @RequestMapping("/predict/start.do")
     public void startPredict(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         if (SVMConfig.IS_PREDICTING == 0) {
-            threadPoolExecutor.execute(dataRecordService);
-            threadPoolExecutor.execute(predictService);
+            predictService.predict();
             SVMConfig.IS_PREDICTING = 1;
             response.getWriter().print("预测服务开启成功。");
         } else {
@@ -61,8 +60,12 @@ public class SVMController {
         ((LearningServiceImpl) learningService).setLable(lable);
 
         learningService.learning();
-        threadPoolExecutor.execute(learningService);
+        response.getWriter().print("OK");
+    }
 
+    @RequestMapping("/action_record.do")
+    public void actionRecord(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        dataRecordService.dataRecieve(URLDecoder.decode(request.getParameter("action"), "UTF-8"));
         response.getWriter().print("OK");
     }
 

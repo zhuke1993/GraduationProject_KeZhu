@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
  * @author ZHUKE
  */
 @Service
-public interface LearningService extends Runnable{
+public interface LearningService{
 
     public void learning();
 }

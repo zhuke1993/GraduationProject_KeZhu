@@ -1,7 +1,5 @@
 package com.zhuke.smart_home.service.impl;
 
-import com.zhuke.smart_home.beans.SHMessage;
-import com.zhuke.smart_home.central.SHConfig;
 import com.zhuke.smart_home.service.MessageService;
 import com.zhuke.smart_home.service.ServerConnService;
 import org.apache.log4j.LogManager;
@@ -49,24 +47,25 @@ public class ServerConnServiceImpl implements ServerConnService {
                     while (it.hasNext()) {
                         SelectionKey key = it.next();
                         it.remove();
-
                         if (key.isAcceptable()) {
                             SocketChannel serverChanel = server.accept();
                             logger.info("收到一个新连接:" + serverChanel.socket().getRemoteSocketAddress());
                             serverChanel.configureBlocking(false);
                             serverChanel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
                         }
-
                         try {
                             if (key.isReadable()) {
                                 SocketChannel serverChanel = (SocketChannel) key.channel();
                                 ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
                                 serverChanel.read(byteBuffer);
                                 byteBuffer.flip();
-                                logger.info("收到客户端：" + ((SocketChannel) key.channel()).socket().getRemoteSocketAddress() +
-                                        "的消息：" + new String(byteBuffer.array()));
-                                SHMessage message = messageService.parseMessage(new String(byteBuffer.array(), 0, byteBuffer.limit()));
-                                SHConfig.messageVector.add(message);
+                                if (byteBuffer.limit() != 0) {
+                                    logger.info("收到客户端：" + ((SocketChannel) key.channel()).socket().getRemoteSocketAddress() + "的消息：" + new String(byteBuffer.array(), 0, byteBuffer.limit()));
+                                } else {
+                                    key.cancel();
+                                }
+                                /*SHMessage message = messageService.parseMessage(new String(byteBuffer.array(), 0, byteBuffer.limit()));
+                                SHConfig.messageVector.add(message);*/
                             }
                         } catch (IOException e) {
                             logger.error("Sever occured a error", e);

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="svmclassifier.zhuke.com.action_record.MainActivity">
+
+    <TextView
+        android:id="@+id/timestampv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50px" />
+
+    <TextView
+        android:id="@+id/ax"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50px" />
+
+    <TextView
+        android:id="@+id/ay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50px" />
+
+    <TextView
+        android:id="@+id/az"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50px" />
+
+    <TextView
+        android:id="@+id/ox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50px" />
+
+    <TextView
+        android:id="@+id/oy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50px" />
+
+    <TextView
+        android:id="@+id/oz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50px" />
+
+    <TextView
+        android:id="@+id/gx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50px" />
+
+    <TextView
+        android:id="@+id/gy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50px" />
+
+    <TextView
+        android:id="@+id/gz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50px" />
+</LinearLayout>

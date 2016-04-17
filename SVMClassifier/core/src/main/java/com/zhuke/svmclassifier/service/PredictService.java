@@ -5,7 +5,7 @@ package com.zhuke.svmclassifier.service;
  *
  * @author ZHUKE
  */
-public interface PredictService extends Runnable{
+public interface PredictService{
 
     public void predict();
 }
