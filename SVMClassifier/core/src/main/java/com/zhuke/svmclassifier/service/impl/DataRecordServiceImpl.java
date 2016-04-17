@@ -1,11 +1,21 @@
 package com.zhuke.svmclassifier.service.impl;
 
 import com.zhuke.svmclassifier.service.DataRecordService;
+import com.zhuke.svmclassifier.service.SVMConfig;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
@@ -14,235 +24,98 @@ import java.util.StringTokenizer;
  */
 @Service
 public class DataRecordServiceImpl implements DataRecordService {
+
     Logger logger = LogManager.getLogger(DataRecordServiceImpl.class);
 
     public static void main(String[] args) {
-        String s = "1460888097986\n" +
-                "1460888098304\n" +
-                "1460888098595\n" +
-                "1460888098838\n" +
-                "1460888099029\n" +
-                "1460888099277\n" +
-                "1460888099525\n" +
-                "1460888099775\n" +
-                "1460888100028\n" +
-                "1460888100213\n" +
-                "1460888100430\n" +
-                "1460888100614\n" +
-                "1460888100791\n" +
-                "1460888101030\n" +
-                "1460888101200\n" +
-                "1460888101412\n" +
-                "1460888101604\n" +
-                "1460888101769\n" +
-                "1460888101934\n" +
-                "1460888102126\n" +
-                "1460888102345\n" +
-                "1460888102516\n" +
-                "1460888102696\n" +
-                "1460888102871\n" +
-                "1460888103046\n" +
-                "1460888103237\n" +
-                "1460888103399\n" +
-                "1460888103701\n" +
-                "1460888103870\n" +
-                "1460888104069\n" +
-                "1460888104288\n" +
-                "1460888104534\n" +
-                "1460888104720\n" +
-                "1460888104911\n" +
-                "1460888105091\n" +
-                "1460888105324\n" +
-                "1460888105572\n" +
-                "1460888105798\n" +
-                "1460888106096\n" +
-                "1460888106367\n" +
-                "1460888106622\n" +
-                "1460888106912\n" +
-                "1460888107181\n" +
-                "1460888107428\n" +
-                "1460888107723\n" +
-                "1460888108134\n" +
-                "1460888108353\n" +
-                "1460888108600\n" +
-                "1460888108815\n" +
-                "1460888109083\n" +
-                "1460888109388\n" +
-                "1460888109639\n" +
-                "1460888109874\n" +
-                "1460888110063\n" +
-                "1460888110287\n" +
-                "1460888110614\n" +
-                "1460888110857\n" +
-                "1460888111036\n" +
-                "1460888111326\n" +
-                "1460888111553\n" +
-                "1460888111819\n" +
-                "1460888112036\n" +
-                "1460888112275\n" +
-                "1460888112489\n" +
-                "1460888112691\n" +
-                "1460888112884\n" +
-                "1460888113188\n" +
-                "1460888113396\n" +
-                "1460888113671\n" +
-                "1460888113902\n" +
-                "1460888114123\n" +
-                "1460888114301\n" +
-                "1460888114529\n" +
-                "1460888115120\n" +
-                "1460888115500\n" +
-                "1460888116017\n" +
-                "1460888116214\n" +
-                "1460888116624\n" +
-                "1460888116831\n" +
-                "1460888117029\n" +
-                "1460888117255\n" +
-                "1460888117482\n" +
-                "1460888117765\n" +
-                "1460888118012\n" +
-                "1460888118255\n" +
-                "1460888118460\n" +
-                "1460888118703\n" +
-                "1460888118918\n" +
-                "1460888119117\n" +
-                "1460888119311\n" +
-                "1460888119524\n" +
-                "1460888119704\n" +
-                "1460888120048\n" +
-                "1460888120310\n" +
-                "1460888120654\n" +
-                "1460888120898\n" +
-                "1460888121071\n" +
-                "1460888121330\n" +
-                "1460888121524\n" +
-                "1460888121755\n" +
-                "1460888121977\n" +
-                "1460888122251\n" +
-                "1460888122510\n" +
-                "1460888122778\n" +
-                "1460888123007\n" +
-                "1460888123205\n" +
-                "1460888123383\n" +
-                "1460888123607\n" +
-                "1460888123812\n" +
-                "1460888124010\n" +
-                "1460888124212\n" +
-                "1460888124422\n" +
-                "1460888124618\n" +
-                "1460888124786\n" +
-                "1460888124951\n" +
-                "1460888125160\n" +
-                "1460888125380\n" +
-                "1460888125568\n" +
-                "1460888125766\n" +
-                "1460888125965\n" +
-                "1460888126155\n" +
-                "1460888126359\n" +
-                "1460888126585\n" +
-                "1460888126990\n" +
-                "1460888127209\n" +
-                "1460888127590\n" +
-                "1460888128193\n" +
-                "1460888128375\n" +
-                "1460888128596\n" +
-                "1460888128781\n" +
-                "1460888129215\n" +
-                "1460888129446\n" +
-                "1460888129775\n" +
-                "1460888130284\n" +
-                "1460888130504\n" +
-                "1460888130705\n" +
-                "1460888130904\n" +
-                "1460888131076\n" +
-                "1460888131311\n" +
-                "1460888131550\n" +
-                "1460888131730\n" +
-                "1460888131939\n" +
-                "1460888132128\n" +
-                "1460888132389\n" +
-                "1460888132597\n" +
-                "1460888132785\n" +
-                "1460888133022\n" +
-                "1460888133247\n" +
-                "1460888133509\n" +
-                "1460888133771\n" +
-                "1460888134001\n" +
-                "1460888134207\n" +
-                "1460888134529\n" +
-                "1460888134751\n" +
-                "1460888134982\n" +
-                "1460888135445\n" +
-                "1460888135634\n" +
-                "1460888135840\n" +
-                "1460888136201\n" +
-                "1460888136600\n" +
-                "1460888136855\n" +
-                "1460888137092\n" +
-                "1460888137273\n" +
-                "1460888137474\n" +
-                "1460888137640\n" +
-                "1460888137841\n" +
-                "1460888138070\n" +
-                "1460888138260\n" +
-                "1460888138453\n" +
-                "1460888138720\n" +
-                "1460888138939\n" +
-                "1460888139119\n" +
-                "1460888139340\n" +
-                "1460888139876\n" +
-                "1460888140106\n" +
-                "1460888140275\n" +
-                "1460888141105\n" +
-                "1460888141525\n" +
-                "1460888141832\n" +
-                "1460888142626\n" +
-                "1460888142973\n" +
-                "1460888143617\n" +
-                "1460888144069\n" +
-                "1460888145231\n" +
-                "1460888145421\n" +
-                "1460888145654\n" +
-                "1460888145848\n" +
-                "1460888146070\n" +
-                "1460888146268\n" +
-                "1460888146756\n" +
-                "1460888146946\n" +
-                "1460888148289\n" +
-                "1460888148464\n" +
-                "1460888149300\n";
-        StringTokenizer st = new StringTokenizer(s, "\n");
-        int size = st.countTokens();
-        long[] longs = new long[size];
-        for (int i = 0; i < size; i++) {
-            longs[i] = Long.parseLong(st.nextToken());
-            System.out.println(longs[i]);
-        }
-        for (int i = 0; i < longs.length; i++) {
-            if (i != longs.length - 1)
-                System.out.println(longs[i + 1] - longs[i]);
-        }
+        new DataRecordServiceImpl().startServer();
     }
 
     public void dataRecieve(String acc) {
-
-        System.out.println(new Date().getTime());
         // Conf.temp_state自增
-        /*SVMConfig.TEMP_STATE++;
+        SVMConfig.TEMP_STATE++;
         // temp数组为一个循环队列，当temp_state的值超过最大值的时候，需要从0开始
         if (SVMConfig.TEMP_STATE == 20) {
             SVMConfig.TEMP_STATE = SVMConfig.TEMP_STATE % SVMConfig.ACTION_TO_RECORD;
         }
         // 将新接收到的数据存入到temp数组的第temp_state行
-        SVMConfig.ACTION_TEMP[SVMConfig.TEMP_STATE] = actionNormalize(acc);*/
+        double[] d = actionNormalize(acc);
+        if (d != null && d.length == SVMConfig.FEATURE_NUM) {
+            SVMConfig.ACTION_TEMP[SVMConfig.TEMP_STATE] = d;
+        }
     }
 
     private double[] actionNormalize(String action) {
-        StringTokenizer st = new StringTokenizer(action, ",");
-        double[] d = new double[st.countTokens()];
-        for (int i = 0; i < st.countTokens(); i++) {
-            d[i] = Double.parseDouble(st.nextToken());
+        try {
+            StringTokenizer st = new StringTokenizer(action, ",");
+            double[] d = new double[st.countTokens()];
+            for (int i = 0; i < st.countTokens(); i++) {
+                d[i] = Double.parseDouble(st.nextToken());
+            }
+            return d;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
-        return d;
+        return null;
+    }
+
+    public void startServer() {
+        ServerSocketChannel server = null;
+        try {
+            Selector selector = Selector.open();
+            server = ServerSocketChannel.open();
+            server.bind(new InetSocketAddress(8999));
+            server.configureBlocking(false);
+            server.register(selector, SelectionKey.OP_ACCEPT);
+            logger.info("......动作数据接收服务器启动成功，等待客户端连接......");
+            while (true) {
+                if (selector.select() > 0) {
+                    Set<SelectionKey> set = selector.selectedKeys();
+                    Iterator<SelectionKey> it = set.iterator();
+                    while (it.hasNext()) {
+                        SelectionKey key = it.next();
+                        it.remove();
+                        if (key.isAcceptable()) {
+                            SocketChannel serverChanel = server.accept();
+                            logger.info("收到一个新连接:" + serverChanel.socket().getRemoteSocketAddress());
+                            serverChanel.configureBlocking(false);
+                            serverChanel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+                        }
+                        try {
+                            if (key.isReadable()) {
+                                SocketChannel serverChanel = (SocketChannel) key.channel();
+                                ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+                                serverChanel.read(byteBuffer);
+                                byteBuffer.flip();
+                                if (byteBuffer.limit() != 0) {
+                                    logger.info("收到客户端：" + ((SocketChannel) key.channel()).socket().getRemoteSocketAddress() + "的消息：" + new String(byteBuffer.array(), 0, byteBuffer.limit()));
+                                } else {
+                                    key.cancel();
+                                }
+                                dataRecieve(new String(byteBuffer.array(), 0, byteBuffer.limit()));
+                            }
+                        } catch (IOException e) {
+                            logger.error("Sever occured a error", e);
+                            key.cancel();
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            logger.error("Server occured a exception", e);
+        } finally {
+            if (server != null) {
+                try {
+                    server.close();
+                } catch (IOException e) {
+                    logger.error("Sever channel closed faild!", e);
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void run() {
+        startServer();
     }
 }

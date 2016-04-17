@@ -65,4 +65,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="50px" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/threadTimeText"
+        android:layout_gravity="center_horizontal" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="确定"
+        android:id="@+id/threadTimeButton" />
 </LinearLayout>

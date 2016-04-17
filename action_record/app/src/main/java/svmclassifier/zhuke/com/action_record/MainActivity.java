@@ -6,6 +6,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
@@ -27,7 +30,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private TextView gY;
     private TextView gZ;
 
+    private EditText sleepTimeText;
+
     private TextView timestampv;
+
+    private Button threadTimeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +54,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         gZ = (TextView) findViewById(R.id.gz);
 
         timestampv = (TextView) findViewById(R.id.timestampv);
+
+        sleepTimeText = (EditText) findViewById(R.id.threadTimeText);
+
+        threadTimeButton = (Button) findViewById(R.id.threadTimeButton);
+        threadTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (sleepTimeText.getText().toString() != null) {
+                    Config.threadTime = Long.parseLong(sleepTimeText.getText().toString());
+                }
+            }
+        });
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
