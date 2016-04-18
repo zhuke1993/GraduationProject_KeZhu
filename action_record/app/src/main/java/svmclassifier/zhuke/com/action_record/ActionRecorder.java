@@ -21,7 +21,7 @@ public class ActionRecorder {
     private static float gz;
 
     public static String getCurrentAction() {
-        return ax + "," + ay + "," + az + "," + oy + "," + oz + "," + gx + "," + gy + "," + gz;
+        return ax + "," + ay + "," + az + "," + oy + "," + oz + "," + gx + "," + gy + "," + gz + ",";
     }
 
     public static float getAx() {

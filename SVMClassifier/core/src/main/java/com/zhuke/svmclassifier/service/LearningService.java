@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
  * @author ZHUKE
  */
 @Service
-public interface LearningService{
-
-    public void learning();
+public interface LearningService {
+    void learning(String lable);
 }

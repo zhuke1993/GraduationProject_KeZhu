@@ -39,7 +39,7 @@ public class DataRecordServiceImpl implements DataRecordService {
         }
         // 将新接收到的数据存入到temp数组的第temp_state行
         double[] d = actionNormalize(acc);
-        if (d != null && d.length == SVMConfig.FEATURE_NUM) {
+        if (d != null && d.length % SVMConfig.FEATURE_NUM == 0) {
             SVMConfig.ACTION_TEMP[SVMConfig.TEMP_STATE] = d;
         }
     }
@@ -59,7 +59,7 @@ public class DataRecordServiceImpl implements DataRecordService {
             }
             return d;
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            logger.error(action + e.getMessage());
         }
         return null;
     }
@@ -93,11 +93,11 @@ public class DataRecordServiceImpl implements DataRecordService {
                                 serverChanel.read(byteBuffer);
                                 byteBuffer.flip();
                                 if (byteBuffer.limit() != 0) {
-                                    logger.info("收到客户端：" + ((SocketChannel) key.channel()).socket().getRemoteSocketAddress() + "的消息：" + new String(byteBuffer.array(), 0, byteBuffer.limit()));
+                                    //logger.info("收到客户端：" + ((SocketChannel) key.channel()).socket().getRemoteSocketAddress() + "的消息：" + new String(byteBuffer.array(), 0, byteBuffer.limit()));
+                                    dataRecieve(new String(byteBuffer.array(), 0, byteBuffer.limit()));
                                 } else {
                                     key.cancel();
                                 }
-                                dataRecieve(new String(byteBuffer.array(), 0, byteBuffer.limit()));
                             }
                         } catch (IOException e) {
                             logger.error("Sever occured a error", e);

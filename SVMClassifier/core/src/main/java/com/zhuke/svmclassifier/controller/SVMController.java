@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.io.*;
 import java.net.URLDecoder;
 
 /**
@@ -54,9 +54,7 @@ public class SVMController {
     @RequestMapping("/learning.do")
     public void learning(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletRequestBindingException {
         String lable = ServletRequestUtils.getStringParameter(request, "lable");
-        ((LearningServiceImpl) learningService).setLable(lable);
-
-        learningService.learning();
+        learningService.learning(lable);
         response.getWriter().print("OK");
     }
 

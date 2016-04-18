@@ -20,7 +20,7 @@ public class ActionRecord {
     /**
      * 动作数据，数据格式为 <lable>空格<attr1>:<value1>空格<attr2>:<value2>
      */
-    @Column
+    @Column(length = 1024)
     private String action;
 
     @Column(name = "created_on")

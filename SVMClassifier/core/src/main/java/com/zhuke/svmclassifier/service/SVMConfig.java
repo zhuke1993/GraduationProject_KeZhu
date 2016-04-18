@@ -108,16 +108,10 @@ public class SVMConfig {
      */
     public static double[][] ACTION_TEMP;
 
-    /**
-     * 即将被训练的数据存放文件地址
-     */
-    public static String ACTION_TO_PREDICT_F;
-
-
     public static void initConfig() {
         Properties properties = new Properties();
         try {
-            properties.load(SVMConfig.class.getResourceAsStream("/svm_classifier.properties"));
+            properties.load(new FileInputStream(SVMConfig.class.getResource("/").getFile() + "/svm_classifier.properties"));
 
             REMOUT_URL = properties.getProperty("conf.REMOUT_URL");
             ACTION_TIME = Integer.parseInt(properties.getProperty("conf.ACTION_TIME"));
@@ -130,29 +124,23 @@ public class SVMConfig {
             NOISE = Integer.parseInt(properties.getProperty("conf.NOISE"));
             C = Integer.parseInt(properties.getProperty("conf.C"));
             G = Double.parseDouble(properties.getProperty("conf.G"));
-            ACTION_TO_PREDICT_F = properties.getProperty("conf.ACTION_TO_PREDICT_F");
 
             TEMP_STATE = 0;
             TO_PERDICT = new double[R - L][FEATURE_NUM];
             ACTION_TEMP = new double[ACTION_TO_RECORD][FEATURE_NUM];
             TO_LEARN = new double[R - L][FEATURE_NUM];
 
-
             //初始化文件夹以及文件
-            File tempFile = new File(SVMConfig.class.getResource("/").getFile() + "/" + SVMConfig.ACTION_TO_PREDICT_F);
             File modelFile = new File(SVMConfig.class.getResource("/").getFile() + "/" + SVMConfig.MODELFILE_PATH);
             try {
                 // 如果这是一个文件夹且不存在的话，则进行新建文件夹
-                if (!tempFile.exists()) {
-                    tempFile.createNewFile();
-                }
                 if (!modelFile.exists()) {
                     modelFile.createNewFile();
                 }
             } catch (IOException e) {
                 logger.error("Field to create system file.", e);
             }
-
+            logger.info("Successed to initiation system config.");
         } catch (IOException e) {
             logger.error("Field to load configuration file.", e);
         }

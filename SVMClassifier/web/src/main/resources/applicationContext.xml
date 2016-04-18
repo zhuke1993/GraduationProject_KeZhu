@@ -9,7 +9,7 @@
 
     <!--配置包扫描-->
     <context:annotation-config/>
-    <context:component-scan base-package="com.zhuke.svmclassifier"/>
+    <context:component-scan base-package="com.zhuke.svmclassifier.service"/>
 
     <!--配置文件位置-->
     <context:property-placeholder location="classpath:svm_classifier.properties"/>
@@ -65,7 +65,7 @@
         <!--自动扫描注解方式配置的hibernate类文件-->
         <property name="packagesToScan">
             <list>
-                <value>com.zhuke.svmclassifier</value>
+                <value>com.zhuke.svmclassifier.entity</value>
             </list>
         </property>
     </bean>
@@ -82,7 +82,6 @@
 
     <!--对标注@Transaction注解的bean进行事务管理-->
     <tx:annotation-driven transaction-manager="hibernateTransactionMananger"/>
-
 
     <!--配置redis-->
     <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">

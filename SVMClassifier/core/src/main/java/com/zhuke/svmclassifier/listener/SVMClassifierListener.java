@@ -29,8 +29,6 @@ public class SVMClassifierListener extends ContextLoaderListener {
             ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) applicationContext.getBean("threadPoolExecutor");
             threadPoolExecutor.execute(serverConnService);
             SVMConfig.initConfig();
-            logger.info("系统设置初始化成功。");
-
         } catch (Exception e) {
             logger.error("初始化启动tomcat容器异常", e);
         }
