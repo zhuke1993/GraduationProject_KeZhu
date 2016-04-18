@@ -111,7 +111,8 @@ public class SVMConfig {
     public static void initConfig() {
         Properties properties = new Properties();
         try {
-            properties.load(new FileInputStream(SVMConfig.class.getResource("/").getFile() + "/svm_classifier.properties"));
+//            properties.load(new FileInputStream(SVMConfig.class.getResource("/").getFile() + "svm_classifier.properties"));
+            properties.load(new FileInputStream("D:\\Users\\Administrator\\Documents\\GraduationProject_KeZhu\\SVMClassifier\\web\\target\\web\\WEB-INF\\classes\\svm_classifier.properties"));
 
             REMOUT_URL = properties.getProperty("conf.REMOUT_URL");
             ACTION_TIME = Integer.parseInt(properties.getProperty("conf.ACTION_TIME"));
