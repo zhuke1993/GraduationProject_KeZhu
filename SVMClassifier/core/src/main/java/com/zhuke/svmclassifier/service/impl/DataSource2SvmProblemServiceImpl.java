@@ -39,7 +39,7 @@ public class DataSource2SvmProblemServiceImpl implements DataSource2SvmProblemSe
 
 
     /**
-     * 获取问题描述，从数据库进行获取，数据的存放格式为<lable>空格<attr1>:<value1>空格<attr2>:<value2>
+     * 获取问题描述，从数据库进行获取，数据的存放格式为<lable>,<attr1>:<value1>,<attr2>:<value2>
      *
      * @param param 参数值
      * @return 得到的svm_problem
@@ -54,7 +54,7 @@ public class DataSource2SvmProblemServiceImpl implements DataSource2SvmProblemSe
 
         for (int i = 0; i < actionRecordList.size(); i++) {
             String action = actionRecordList.get(i).getAction();
-            StringTokenizer st = new StringTokenizer(action, " ");
+            StringTokenizer st = new StringTokenizer(action, ",");
             int countTockens = st.countTokens();
 
             double label = atof(st.nextToken());
@@ -101,7 +101,7 @@ public class DataSource2SvmProblemServiceImpl implements DataSource2SvmProblemSe
             String line = fp.readLine();
             if (line == null)
                 break;
-            StringTokenizer st = new StringTokenizer(line, " \t\n\r\f:");
+            StringTokenizer st = new StringTokenizer(line, ",:");
 
             vy.addElement(atof(st.nextToken()));
 

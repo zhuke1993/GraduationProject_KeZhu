@@ -72,6 +72,11 @@ public class SVMConfig {
     public static int R;
 
     /**
+     * 从预测数组中取出数据的有边界的延迟
+     */
+    public static int NOISE;
+
+    /**
      * svm_parameter的c的值
      */
     public static double C;
@@ -91,6 +96,11 @@ public class SVMConfig {
      * 用来记录待预测的数据的数组
      */
     public static double[][] TO_PERDICT;
+
+    /**
+     * 用来记录待学习数据的数组
+     */
+    public static double[][] TO_LEARN;
 
     /**
      * 用来记录前2s的时间内，手环的动作信息状态，当数组满时，会覆盖最旧的数据，维护一个20*6的数组
@@ -117,6 +127,7 @@ public class SVMConfig {
             ACTION_TO_RECORD = Integer.parseInt(properties.getProperty("conf.ACTION_TO_RECORD"));
             L = Integer.parseInt(properties.getProperty("conf.L"));
             R = Integer.parseInt(properties.getProperty("conf.R"));
+            NOISE = Integer.parseInt(properties.getProperty("conf.NOISE"));
             C = Integer.parseInt(properties.getProperty("conf.C"));
             G = Double.parseDouble(properties.getProperty("conf.G"));
             ACTION_TO_PREDICT_F = properties.getProperty("conf.ACTION_TO_PREDICT_F");
@@ -124,6 +135,7 @@ public class SVMConfig {
             TEMP_STATE = 0;
             TO_PERDICT = new double[R - L][FEATURE_NUM];
             ACTION_TEMP = new double[ACTION_TO_RECORD][FEATURE_NUM];
+            TO_LEARN = new double[R - L][FEATURE_NUM];
 
 
             //初始化文件夹以及文件

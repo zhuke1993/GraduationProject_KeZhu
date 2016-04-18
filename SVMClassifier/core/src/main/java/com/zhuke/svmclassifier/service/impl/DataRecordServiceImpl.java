@@ -13,7 +13,6 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -35,7 +34,7 @@ public class DataRecordServiceImpl implements DataRecordService {
         // Conf.temp_state自增
         SVMConfig.TEMP_STATE++;
         // temp数组为一个循环队列，当temp_state的值超过最大值的时候，需要从0开始
-        if (SVMConfig.TEMP_STATE == 20) {
+        if (SVMConfig.TEMP_STATE == SVMConfig.ACTION_TO_RECORD) {
             SVMConfig.TEMP_STATE = SVMConfig.TEMP_STATE % SVMConfig.ACTION_TO_RECORD;
         }
         // 将新接收到的数据存入到temp数组的第temp_state行
@@ -51,6 +50,12 @@ public class DataRecordServiceImpl implements DataRecordService {
             double[] d = new double[st.countTokens()];
             for (int i = 0; i < st.countTokens(); i++) {
                 d[i] = Double.parseDouble(st.nextToken());
+                //对方向传感器的值进行归一化处理
+                if (i == 3) {
+                    d[i] = d[i] / 360;
+                } else if (i == 4) {
+                    d[i] = d[i] / 180;
+                }
             }
             return d;
         } catch (NumberFormatException e) {

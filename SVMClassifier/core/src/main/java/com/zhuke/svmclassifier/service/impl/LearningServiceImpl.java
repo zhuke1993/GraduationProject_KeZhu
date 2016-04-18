@@ -7,6 +7,7 @@ import com.zhuke.svmclassifier.service.LearningService;
 import com.zhuke.svmclassifier.service.SVMConfig;
 import libsvm.svm;
 import libsvm.svm_problem;
+import org.apache.ibatis.type.DoubleTypeHandler;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,28 @@ public class LearningServiceImpl implements LearningService {
         this.lable = lable;
     }
 
+    public static void main(String[] args) {
+        double[] t = new double[(20 - 10) * 8];
+        double[][] d = new double[20][8];
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 8; j++) {
+                d[i][j] = i * j + j;
+                System.out.print(d[i][j] + " ");
+            }
+            System.out.println();
+        }
+        for (int i = 0; i < 8; i++) {
+            for (int j = 20 - 5; j > 20 - 5 - (20 - 10); j--) {
+                //将数组按列聚合
+                t[i * 10 + 15 - j] = d[j][i];
+            }
+        }
+        System.out.println("-------------");
+        for (int i = 0; i < t.length; i++) {
+            System.out.print(t[i] + " ");
+        }
+    }
+
     @Transactional(readOnly = false)
     public void learning() {
 
@@ -49,17 +72,36 @@ public class LearningServiceImpl implements LearningService {
         if (!StringUtils.isEmpty(lable)) {
             logger.info("收到学习指令:" + lable);
 
-            double[] t = new double[(SVMConfig.R - SVMConfig.L) * SVMConfig.FEATURE_NUM];
-            for (int k = 0; k < SVMConfig.FEATURE_NUM; k++) {
-                for (int j = 0; j < SVMConfig.R - SVMConfig.L; j++) {
-                    t[j * SVMConfig.FEATURE_NUM + k] = SVMConfig.ACTION_TEMP[j][k];
+            if (SVMConfig.TEMP_STATE < SVMConfig.R - SVMConfig.L + SVMConfig.NOISE) {
+                //此时需要取历史数据
+                int count = 0;
+                for (int i = 0, j = SVMConfig.TEMP_STATE; j >= SVMConfig.NOISE; i++, j--) {
+                    SVMConfig.TO_PERDICT[i] = SVMConfig.ACTION_TEMP[j - SVMConfig.NOISE];
+                    count++;
+                }
+                for (int i = SVMConfig.ACTION_TO_RECORD, j = count; count < SVMConfig.R - SVMConfig.L; i--, j++) {
+                    SVMConfig.TO_PERDICT[count] = SVMConfig.ACTION_TEMP[i - 1];
+                    count++;
+                }
+            } else {
+                //直接存取
+                for (int i = 0, j = SVMConfig.TEMP_STATE; i < SVMConfig.R - SVMConfig.L; i++, j--) {
+                    SVMConfig.TO_PERDICT[i] = SVMConfig.ACTION_TEMP[j - SVMConfig.NOISE];
                 }
             }
 
-            //将数据拼接成字符串，数据格式为 <lable>空格<attr1>:<value1>空格<attr2>:<value2>
-            String actionStr = lable + "";
+            // 将待预测数组进行格式化处理，将各属性值进行调整
+            double[] t = new double[(SVMConfig.R - SVMConfig.L) * SVMConfig.FEATURE_NUM];
+
+            for (int i = 0; i < SVMConfig.FEATURE_NUM; i++) {
+                for (int j = 0; j < SVMConfig.R - SVMConfig.L; j++) {
+                    t[i * SVMConfig.FEATURE_NUM + j] = SVMConfig.TO_PERDICT[j][i];
+                }
+            }
+            //将数据拼接成字符串，数据格式为 <lable>,<attr1>:<value1>,<attr2>:<value2>
+            String actionStr = lable;
             for (int i = 0; i < t.length; i++) {
-                actionStr = actionStr + " " + (i + 1) + ":" + t[i];
+                actionStr = actionStr + "," + (i + 1) + ":" + t[i];
             }
             ActionRecord actionRecord = new ActionRecord();
             actionRecord.setAction(actionStr);
@@ -70,6 +112,7 @@ public class LearningServiceImpl implements LearningService {
                 //对model进行再次训练
                 svm_problem prob = dataSource2SvmProblemService.readFromDB(SVMParam.setparameter(SVMConfig.C, SVMConfig.G));
                 SVMConfig.MODEL = svm.svm_train(prob, SVMParam.setparameter(SVMConfig.C, SVMConfig.G));
+                svm.svm_save_model(this.getClass().getResource("/") + SVMConfig.MODELFILE_PATH, SVMConfig.MODEL);
                 logger.info("SVM学习结束，new model = " + SVMConfig.MODEL.toString());
             } catch (IOException e) {
                 logger.error("学习线程发生异常", e);
