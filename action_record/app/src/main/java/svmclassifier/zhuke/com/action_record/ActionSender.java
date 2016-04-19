@@ -3,9 +3,11 @@ package svmclassifier.zhuke.com.action_record;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URL;
+import java.util.StringTokenizer;
 
 /**
  * 动作数据发送线程
@@ -18,10 +20,10 @@ public class ActionSender implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        while (SVMConfig.isUpdateBuffer) {
             try {
-                sendMessage(ActionRecorder.getCurrentAction());
-                Thread.sleep(Config.threadTime);
+                updateBuffer();
+                Thread.sleep(SVMConfig.threadTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -32,9 +34,9 @@ public class ActionSender implements Runnable {
     /**
      * 初始化socket
      */
-    private void initSocket() {
+    public static void initSocket() {
         try {
-            socket = new Socket(Config.serverIP, Config.serverPort);
+            socket = new Socket(SVMConfig.serverIP, SVMConfig.serverPort);
             printStream = new PrintStream(socket.getOutputStream(), true, "UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
@@ -46,7 +48,7 @@ public class ActionSender implements Runnable {
      *
      * @param message
      */
-    private void sendMessage(String message) {
+    public static void sendMessage(String message) {
         if (socket == null) {
             initSocket();
         }
@@ -58,19 +60,90 @@ public class ActionSender implements Runnable {
      *
      * @throws IOException
      */
-    private void sendAction() throws IOException {
-        String currentAction = ActionRecorder.getCurrentAction();
-
-        HttpURLConnection conn = (HttpURLConnection) new URL(Config.serverURL + "?action=" + currentAction).openConnection();
+    public static void sendAction(String message) throws IOException {
+        HttpURLConnection conn = (HttpURLConnection) new URL(SVMConfig.serverURL + "?action=" + message).openConnection();
         conn.setRequestMethod("GET");
         conn.setReadTimeout(200);
         conn.setConnectTimeout(200);
         conn.setUseCaches(false);
 
         if (conn.getResponseCode() == 200) {
-            System.out.println("Success send action data = " + currentAction);
+            System.out.println("Success send action data = " + message);
         }
         conn.disconnect();
+    }
+
+    /**
+     * 更新缓冲区数组
+     */
+    private static void updateBuffer() {
+        // 将新接收到的数据存入到temp数组的第temp_state行
+        double[] d = actionNormalize(ActionRecorder.getCurrentAction());
+        if (d != null) {
+            System.arraycopy(d, 0, SVMConfig.ACTION_TEMP[SVMConfig.TEMP_STATE], 0, SVMConfig.FEATURE_NUM);
+            SVMConfig.TEMP_STATE = (SVMConfig.TEMP_STATE + 1) % SVMConfig.ACTION_TO_RECORD;
+        }
+
+    }
+
+    private static double[] actionNormalize(String action) {
+        try {
+            StringTokenizer st = new StringTokenizer(action, ",~");
+            int count = st.countTokens();
+            double[] d = new double[count];
+            for (int i = 0; i < count; i++) {
+                d[i] = Double.parseDouble(st.nextToken());
+                //对方向传感器的值进行归一化处理
+                if (i == 3) {
+                    d[i] = new BigDecimal(d[i] / 360).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                } else if (i == 4) {
+                    d[i] = new BigDecimal(d[i] / 180).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                }
+            }
+            return d;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    /**
+     * 更新待发送数组
+     */
+    public static void updateToSendArray() {
+        if (SVMConfig.TEMP_STATE < SVMConfig.R - SVMConfig.L + SVMConfig.NOISE) {
+            //此时需要取历史数据
+            int count = 0;
+            for (int i = 0, j = SVMConfig.TEMP_STATE; j >= SVMConfig.NOISE; i++, j--) {
+                SVMConfig.TO_SEND[i] = SVMConfig.ACTION_TEMP[j - SVMConfig.NOISE];
+                count++;
+            }
+            for (int i = SVMConfig.ACTION_TO_RECORD, j = count; count < SVMConfig.R - SVMConfig.L; i--, j++) {
+                SVMConfig.TO_SEND[count] = SVMConfig.ACTION_TEMP[i - 1];
+                count++;
+            }
+        } else {
+            //直接存取
+            for (int i = 0, j = SVMConfig.TEMP_STATE; i < SVMConfig.R - SVMConfig.L; i++, j--) {
+                SVMConfig.TO_SEND[i] = SVMConfig.ACTION_TEMP[j - SVMConfig.NOISE];
+            }
+        }
+    }
+
+    public static String actionStrBuiler() {
+        // 将待预测数组进行格式化处理，将各属性值进行调整
+        double[] t = new double[(SVMConfig.R - SVMConfig.L) * SVMConfig.FEATURE_NUM];
+        for (int i = 0; i < SVMConfig.FEATURE_NUM; i++) {
+            for (int j = 0; j < SVMConfig.R - SVMConfig.L; j++) {
+                t[i * (SVMConfig.R - SVMConfig.L) + j] = SVMConfig.TO_SEND[j][i];
+            }
+        }
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < t.length; i++) {
+            sb.append(t[i] + ",");
+        }
+        return sb.toString().substring(0, sb.toString().length() - 2);
     }
 
 }

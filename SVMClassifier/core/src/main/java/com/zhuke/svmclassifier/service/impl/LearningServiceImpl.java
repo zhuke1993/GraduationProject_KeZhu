@@ -42,7 +42,7 @@ public class LearningServiceImpl implements LearningService {
         if (!StringUtils.isEmpty(lable)) {
             logger.info("收到学习指令:" + lable);
 
-            ArrayUtil.updateToLearnArray();
+           /* ArrayUtil.updateToLearnArray();
 
             // 将待预测数组进行格式化处理，将各属性值进行调整
             double[] t = new double[(SVMConfig.R - SVMConfig.L) * SVMConfig.FEATURE_NUM];
@@ -50,7 +50,8 @@ public class LearningServiceImpl implements LearningService {
                 for (int j = 0; j < SVMConfig.R - SVMConfig.L; j++) {
                     t[i * (SVMConfig.R - SVMConfig.L) + j] = SVMConfig.TO_LEARN[j][i];
                 }
-            }
+            }*/
+            double[] t = SVMConfig.getActionArray();
             //将数据拼接成字符串，数据格式为 <lable>,<attr1>:<value1>,<attr2>:<value2>
             String actionStr = lable;
             for (int i = 0; i < t.length; i++) {

@@ -6,11 +6,13 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View view) {
                 if (sleepTimeText.getText().toString() != null) {
-                    Config.threadTime = Long.parseLong(sleepTimeText.getText().toString());
+                    SVMConfig.threadTime = Long.parseLong(sleepTimeText.getText().toString());
                 }
             }
         });
@@ -77,8 +79,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sensorManager.registerListener(this, linearAcc, SensorManager.SENSOR_DELAY_UI);
         sensorManager.registerListener(this, gyroscopeSensor, SensorManager.SENSOR_DELAY_UI);
 
-        //启动数据发送线程
-        new Thread(new ActionSender()).start();
+        Thread thread = new Thread(new ActionSender(), "action_sender");
+        thread.start();
     }
 
     @Override
@@ -113,5 +115,29 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        super.onKeyDown(keyCode, event);
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            //填充数据
+            SVMConfig.isUpdateBuffer = true;
+        }
+        return true;
+    }
+
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        super.onKeyDown(keyCode, event);
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            try {
+                //发送数据
+                ActionSender.updateToSendArray();
+                ActionSender.initSocket();
+                ActionSender.sendAction(ActionSender.actionStrBuiler());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
     }
 }

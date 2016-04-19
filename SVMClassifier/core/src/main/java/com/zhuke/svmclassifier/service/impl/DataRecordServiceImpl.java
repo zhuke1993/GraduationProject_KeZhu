@@ -52,7 +52,7 @@ public class DataRecordServiceImpl implements DataRecordService {
     public void dataRecieve(String acc) {
 
         // 将新接收到的数据存入到temp数组的第temp_state行
-        double[] d = actionNormalize(acc);
+       /* double[] d = actionNormalize(acc);
         if (d != null && d.length % SVMConfig.FEATURE_NUM == 0) {
             for (int i = 0; i < d.length / SVMConfig.FEATURE_NUM; i++) {
                 try {
@@ -62,7 +62,14 @@ public class DataRecordServiceImpl implements DataRecordService {
                 }
                 SVMConfig.TEMP_STATE = (SVMConfig.TEMP_STATE + 1) % SVMConfig.ACTION_TO_RECORD;
             }
+        }*/
+        StringTokenizer st = new StringTokenizer(",");
+        int count = st.countTokens();
+        double[] d = new double[(SVMConfig.R - SVMConfig.L) * SVMConfig.FEATURE_NUM];
+        for (int i = 0; i < count; i++) {
+            d[i] = Double.parseDouble(st.nextToken());
         }
+        SVMConfig.setActionArray(d);
     }
 
     private double[] actionNormalize(String action) {

@@ -19,6 +19,16 @@ public class SVMConfig {
 
     private static Logger logger = LogManager.getLogger(SVMConfig.class);
 
+    public static double[] ACTION_ARRAY;
+
+    public synchronized static double[] getActionArray() {
+        return ACTION_ARRAY;
+    }
+
+    public synchronized static void setActionArray(double[] actionArray) {
+        ACTION_ARRAY = actionArray;
+    }
+
     /**
      * 预测线程是否运行中，0-否，1-是
      */
@@ -44,12 +54,10 @@ public class SVMConfig {
      */
     public static int PREDICT_TIME;
 
-
     /**
      * 应用的model文件存放路径
      */
     public static String MODELFILE_PATH;
-
 
     /**
      * 特征数
@@ -131,6 +139,7 @@ public class SVMConfig {
             TO_PERDICT = new double[R - L][FEATURE_NUM];
             ACTION_TEMP = new double[ACTION_TO_RECORD][FEATURE_NUM];
             TO_LEARN = new double[R - L][FEATURE_NUM];
+            ACTION_ARRAY = new double[(R - L) * FEATURE_NUM];
 
             //初始化文件夹以及文件
             File modelFile = new File(SVMConfig.class.getResource("/").getFile() + "/" + SVMConfig.MODELFILE_PATH);
