@@ -30,9 +30,11 @@ public class PredictServiceImpl implements PredictService {
             ArrayUtil.updateToPredictArray();
             // 将待预测数组进行格式化处理，将各属性值进行调整
             double[] t = new double[(SVMConfig.R - SVMConfig.L) * SVMConfig.FEATURE_NUM];
+            String actions = "";
             for (int i = 0; i < SVMConfig.FEATURE_NUM; i++) {
                 for (int j = 0; j < SVMConfig.R - SVMConfig.L; j++) {
-                    t[i * SVMConfig.FEATURE_NUM + j] = SVMConfig.TO_PERDICT[j][i];
+                    t[i * (SVMConfig.R - SVMConfig.L) + j] = SVMConfig.TO_PERDICT[j][i];
+                    actions = actions + t[i] + ",";
                 }
             }
             // 将该数组填充进node数组，进行预测
@@ -46,7 +48,8 @@ public class PredictServiceImpl implements PredictService {
             double result = svm.svm_predict(SVMConfig.MODEL, nodes);
             // 向局域网内的所有的家电广播得到的结果值
             //messageSendService.sendMessage(String.valueOf(result));
-            System.out.println("得到预测值" + result);
+            logger.info("待预测数据：" + actions);
+            logger.info("得到预测值:" + result);
             try {
                 Thread.sleep(SVMConfig.PREDICT_TIME);
             } catch (InterruptedException e) {

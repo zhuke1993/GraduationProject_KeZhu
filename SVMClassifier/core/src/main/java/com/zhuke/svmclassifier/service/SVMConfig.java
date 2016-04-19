@@ -1,5 +1,6 @@
 package com.zhuke.svmclassifier.service;
 
+import libsvm.svm;
 import libsvm.svm_model;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -111,8 +112,8 @@ public class SVMConfig {
     public static void initConfig() {
         Properties properties = new Properties();
         try {
-//            properties.load(new FileInputStream(SVMConfig.class.getResource("/").getFile() + "svm_classifier.properties"));
-            properties.load(new FileInputStream("D:\\Users\\Administrator\\Documents\\GraduationProject_KeZhu\\SVMClassifier\\web\\target\\web\\WEB-INF\\classes\\svm_classifier.properties"));
+            properties.load(new FileInputStream(SVMConfig.class.getResource("/").getFile() + "svm_classifier.properties"));
+            //properties.load(new FileInputStream("D:\\Users\\Administrator\\Documents\\GraduationProject_KeZhu\\SVMClassifier\\web\\target\\web\\WEB-INF\\classes\\svm_classifier.properties"));
 
             REMOUT_URL = properties.getProperty("conf.REMOUT_URL");
             ACTION_TIME = Integer.parseInt(properties.getProperty("conf.ACTION_TIME"));
@@ -133,6 +134,7 @@ public class SVMConfig {
 
             //初始化文件夹以及文件
             File modelFile = new File(SVMConfig.class.getResource("/").getFile() + "/" + SVMConfig.MODELFILE_PATH);
+
             try {
                 // 如果这是一个文件夹且不存在的话，则进行新建文件夹
                 if (!modelFile.exists()) {
@@ -141,6 +143,7 @@ public class SVMConfig {
             } catch (IOException e) {
                 logger.error("Field to create system file.", e);
             }
+            MODEL = svm.svm_load_model(new SVMConfig().getClass().getResource("/").getFile() + SVMConfig.MODELFILE_PATH);
             logger.info("Successed to initiation system config.");
         } catch (IOException e) {
             logger.error("Field to load configuration file.", e);

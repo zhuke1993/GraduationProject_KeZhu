@@ -7,13 +7,13 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -27,30 +27,46 @@ public class DataRecordServiceImpl implements DataRecordService {
 
     Logger logger = LogManager.getLogger(DataRecordServiceImpl.class);
 
-    public static void main(String[] args) {
-        SVMConfig.initConfig();
-        new DataRecordServiceImpl().dataRecieve("-0.19,-0.57,0.03,-22.71,1.04,0.08,-0.03,-0.01~-0.18,-0.47,-0.71,-22.86,1.14,-0.04,0.01,0.03~");
-    }
+    /*public static void main(String[] args) {
+        int[][] d = new int[10][8];
+        int[] e = new int[8];
+        Arrays.fill(e, new Integer(1));
+        Arrays.fill(d, e);
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 8; j++) {
+                System.out.print(d[i][j] + " ");
+            }
+            System.out.println();
+        }
+        int[] f = new int[80];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 10; j++) {
+                f[i * 10 + j] = d[j][i];
+            }
+        }
+        for (int i = 0; i < 80; i++) {
+            System.out.print(f[i]+" ");
+        }
+    }*/
 
     public void dataRecieve(String acc) {
 
-        // temp数组为一个循环队列，当temp_state的值超过最大值的时候，需要从0开始
-        if (SVMConfig.TEMP_STATE == SVMConfig.ACTION_TO_RECORD) {
-            SVMConfig.TEMP_STATE = SVMConfig.TEMP_STATE % SVMConfig.ACTION_TO_RECORD;
-        }
         // 将新接收到的数据存入到temp数组的第temp_state行
         double[] d = actionNormalize(acc);
         if (d != null && d.length % SVMConfig.FEATURE_NUM == 0) {
             for (int i = 0; i < d.length / SVMConfig.FEATURE_NUM; i++) {
-                System.arraycopy(d, i * SVMConfig.FEATURE_NUM, SVMConfig.ACTION_TEMP[SVMConfig.TEMP_STATE], 0, SVMConfig.FEATURE_NUM);
-                SVMConfig.TEMP_STATE++;
+                try {
+                    System.arraycopy(d, i * SVMConfig.FEATURE_NUM, SVMConfig.ACTION_TEMP[SVMConfig.TEMP_STATE], 0, SVMConfig.FEATURE_NUM);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                SVMConfig.TEMP_STATE = (SVMConfig.TEMP_STATE + 1) % SVMConfig.ACTION_TO_RECORD;
             }
         }
     }
 
     private double[] actionNormalize(String action) {
         try {
-
             StringTokenizer st = new StringTokenizer(action, ",~");
             int count = st.countTokens();
             double[] d = new double[count];
@@ -58,14 +74,14 @@ public class DataRecordServiceImpl implements DataRecordService {
                 d[i] = Double.parseDouble(st.nextToken());
                 //对方向传感器的值进行归一化处理
                 if (i == 3) {
-                    d[i] = d[i] / 360;
+                    d[i] = new BigDecimal(d[i] / 360).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                 } else if (i == 4) {
-                    d[i] = d[i] / 180;
+                    d[i] = new BigDecimal(d[i] / 180).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                 }
             }
             return d;
         } catch (NumberFormatException e) {
-            logger.error(action + e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }

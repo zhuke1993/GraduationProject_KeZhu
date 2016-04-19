@@ -35,8 +35,8 @@ public class SVMController {
     public void startPredict(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         if (SVMConfig.IS_PREDICTING == 0) {
-            predictService.predict();
             SVMConfig.IS_PREDICTING = 1;
+            predictService.predict();
             response.getWriter().print("预测服务开启成功。");
         } else {
             response.getWriter().print("预测服务正在运行中，无需重复启动。");

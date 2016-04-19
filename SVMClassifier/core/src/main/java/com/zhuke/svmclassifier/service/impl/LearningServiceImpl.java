@@ -48,7 +48,7 @@ public class LearningServiceImpl implements LearningService {
             double[] t = new double[(SVMConfig.R - SVMConfig.L) * SVMConfig.FEATURE_NUM];
             for (int i = 0; i < SVMConfig.FEATURE_NUM; i++) {
                 for (int j = 0; j < SVMConfig.R - SVMConfig.L; j++) {
-                    t[i * SVMConfig.FEATURE_NUM + j] = SVMConfig.TO_LEARN[j][i];
+                    t[i * (SVMConfig.R - SVMConfig.L) + j] = SVMConfig.TO_LEARN[j][i];
                 }
             }
             //将数据拼接成字符串，数据格式为 <lable>,<attr1>:<value1>,<attr2>:<value2>
