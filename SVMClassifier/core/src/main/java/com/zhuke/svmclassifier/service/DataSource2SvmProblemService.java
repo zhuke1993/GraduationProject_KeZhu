@@ -18,11 +18,10 @@ public interface DataSource2SvmProblemService {
     /**
      * 获取问题描述，从数据库进行获取，数据的存放格式为<lable>空格<attr1>:<value1>空格<attr2>:<value2>
      *
-     * @param param 参数值
      * @return 得到的svm_problem
      * @throws IOException
      */
-    public svm_problem readFromDB(svm_parameter param) throws IOException;
+    public svm_problem readFromDB() throws IOException;
 
 
     /**

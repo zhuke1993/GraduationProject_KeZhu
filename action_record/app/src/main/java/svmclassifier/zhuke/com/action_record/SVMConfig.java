@@ -11,7 +11,7 @@ public class SVMConfig {
 
     static String serverURL = "http://zhuke1993.vicp.cc:8080/action_record.do";
 
-    static long threadTime = 200;
+    static long threadTime = 100;
 
     public static boolean isUpdateBuffer = false;
 

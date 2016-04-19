@@ -8,6 +8,7 @@ import com.zhuke.svmclassifier.service.SVMConfig;
 import com.zhuke.svmclassifier.util.ArrayUtil;
 import libsvm.svm;
 import libsvm.svm_problem;
+import libsvm.svm_parameter;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 
 /**
@@ -51,24 +53,30 @@ public class LearningServiceImpl implements LearningService {
                     t[i * (SVMConfig.R - SVMConfig.L) + j] = SVMConfig.TO_LEARN[j][i];
                 }
             }*/
-            double[] t = SVMConfig.getActionArray();
-            //将数据拼接成字符串，数据格式为 <lable>,<attr1>:<value1>,<attr2>:<value2>
-            String actionStr = lable;
-            for (int i = 0; i < t.length; i++) {
-                actionStr = actionStr + "," + (i + 1) + ":" + t[i];
-            }
-            ActionRecord actionRecord = new ActionRecord();
-            actionRecord.setAction(actionStr);
-            hibernateTemplate.save(actionRecord);
-            logger.info("数据已保存：" + actionStr);
-            try {
-                //对model进行再次训练
-                svm_problem prob = dataSource2SvmProblemService.readFromDB(SVMParam.setparameter(SVMConfig.C, SVMConfig.G));
-                SVMConfig.MODEL = svm.svm_train(prob, SVMParam.setparameter(SVMConfig.C, SVMConfig.G));
-                svm.svm_save_model(this.getClass().getResource("/").getFile() + SVMConfig.MODELFILE_PATH, SVMConfig.MODEL);
-                logger.info("SVM学习结束，new model = " + SVMConfig.MODEL.toString());
-            } catch (IOException e) {
-                logger.error("学习线程发生异常", e);
+            if (!ArrayUtil.isZero(SVMConfig.getActionArray())) {
+                double[] t = new double[SVMConfig.ACTION_ARRAY.length];
+                System.arraycopy(SVMConfig.ACTION_ARRAY, 0, t, 0, t.length);
+
+                Arrays.fill(SVMConfig.getActionArray(), 0);
+
+                //将数据拼接成字符串，数据格式为 <lable>,<attr1>:<value1>,<attr2>:<value2>
+                String actionStr = lable;
+                for (int i = 0; i < t.length; i++) {
+                    actionStr = actionStr + " " + (i + 1) + ":" + t[i];
+                }
+                ActionRecord actionRecord = new ActionRecord();
+                actionRecord.setAction(actionStr);
+                hibernateTemplate.save(actionRecord);
+                logger.info("数据已保存：" + actionStr);
+                try {
+                    //对model进行再次训练
+                    svm_problem prob = dataSource2SvmProblemService.readFromDB();
+                    SVMConfig.MODEL = svm.svm_train(prob, SVMParam.getParameter(SVMConfig.C, SVMConfig.G));
+                    svm.svm_save_model(this.getClass().getResource("/").getFile() + SVMConfig.MODELFILE_PATH, SVMConfig.MODEL);
+                    logger.info("SVM学习结束，new model = " + SVMConfig.MODEL.toString());
+                } catch (IOException e) {
+                    logger.error("学习线程发生异常", e);
+                }
             }
         }
     }

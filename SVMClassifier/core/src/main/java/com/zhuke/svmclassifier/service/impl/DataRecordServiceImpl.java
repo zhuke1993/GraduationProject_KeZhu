@@ -63,7 +63,8 @@ public class DataRecordServiceImpl implements DataRecordService {
                 SVMConfig.TEMP_STATE = (SVMConfig.TEMP_STATE + 1) % SVMConfig.ACTION_TO_RECORD;
             }
         }*/
-        StringTokenizer st = new StringTokenizer(",");
+        logger.info("得到客户端发送的请求：action = " + acc);
+        StringTokenizer st = new StringTokenizer(acc, ",");
         int count = st.countTokens();
         double[] d = new double[(SVMConfig.R - SVMConfig.L) * SVMConfig.FEATURE_NUM];
         for (int i = 0; i < count; i++) {
@@ -122,7 +123,7 @@ public class DataRecordServiceImpl implements DataRecordService {
                                 serverChanel.read(byteBuffer);
                                 byteBuffer.flip();
                                 if (byteBuffer.limit() != 0) {
-                                    //logger.info("收到客户端：" + ((SocketChannel) key.channel()).socket().getRemoteSocketAddress() + "的消息：" + new String(byteBuffer.array(), 0, byteBuffer.limit()));
+                                    logger.info("收到客户端：" + ((SocketChannel) key.channel()).socket().getRemoteSocketAddress() + "的消息：" + new String(byteBuffer.array(), 0, byteBuffer.limit()));
                                     dataRecieve(new String(byteBuffer.array(), 0, byteBuffer.limit()));
                                 } else {
                                     key.cancel();

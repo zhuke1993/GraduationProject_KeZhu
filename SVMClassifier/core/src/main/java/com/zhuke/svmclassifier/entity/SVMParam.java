@@ -12,12 +12,12 @@ public class SVMParam {
 
     /**
      * svm参数设置
-     *
+     *8.0 0.0078125 87.5
      * @param c
      * @param g
      * @return
      */
-    public static svm_parameter setparameter(double c, double g) {
+    public static svm_parameter getParameter(double c, double g) {
         svm_parameter param = new svm_parameter();
         param.svm_type = svm_parameter.C_SVC;
         param.kernel_type = svm_parameter.RBF;

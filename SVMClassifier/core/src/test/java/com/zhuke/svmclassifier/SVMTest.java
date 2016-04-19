@@ -48,7 +48,7 @@ public class SVMTest {
 
     @Test
     public void testDatasource2svmproblem() throws IOException {
-        svm_problem svm_problem = dataSource2SvmProblemService.readFromDB(null);
+        svm_problem svm_problem = dataSource2SvmProblemService.readFromDB();
         System.out.println(svm_problem.l);
         for (int i = 0; i < svm_problem.l; i++) {
             System.out.println(svm_problem.x[i]);

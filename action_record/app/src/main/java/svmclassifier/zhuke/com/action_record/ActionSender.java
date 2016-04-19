@@ -1,12 +1,15 @@
 package svmclassifier.zhuke.com.action_record;
 
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.StringTokenizer;
 
 /**
@@ -20,13 +23,12 @@ public class ActionSender implements Runnable {
 
     @Override
     public void run() {
-        while (SVMConfig.isUpdateBuffer) {
-            try {
-                updateBuffer();
-                Thread.sleep(SVMConfig.threadTime);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        try {
+            //发送数据
+            ActionSender.updateToSendArray();
+            ActionSender.sendAction(ActionSender.actionStrBuiler());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -61,7 +63,7 @@ public class ActionSender implements Runnable {
      * @throws IOException
      */
     public static void sendAction(String message) throws IOException {
-        HttpURLConnection conn = (HttpURLConnection) new URL(SVMConfig.serverURL + "?action=" + message).openConnection();
+        HttpURLConnection conn = (HttpURLConnection) new URL(SVMConfig.serverURL + "?action=" + URLEncoder.encode(message, "UTF-8")).openConnection();
         conn.setRequestMethod("GET");
         conn.setReadTimeout(200);
         conn.setConnectTimeout(200);
@@ -76,14 +78,15 @@ public class ActionSender implements Runnable {
     /**
      * 更新缓冲区数组
      */
-    private static void updateBuffer() {
+    public static void updateBuffer() throws InterruptedException {
         // 将新接收到的数据存入到temp数组的第temp_state行
-        double[] d = actionNormalize(ActionRecorder.getCurrentAction());
+        String s = ActionRecorder.getCurrentAction();
+        double[] d = actionNormalize(s);
+        System.out.println("得到状态值" + s);
         if (d != null) {
             System.arraycopy(d, 0, SVMConfig.ACTION_TEMP[SVMConfig.TEMP_STATE], 0, SVMConfig.FEATURE_NUM);
             SVMConfig.TEMP_STATE = (SVMConfig.TEMP_STATE + 1) % SVMConfig.ACTION_TO_RECORD;
         }
-
     }
 
     private static double[] actionNormalize(String action) {
@@ -143,7 +146,7 @@ public class ActionSender implements Runnable {
         for (int i = 0; i < t.length; i++) {
             sb.append(t[i] + ",");
         }
-        return sb.toString().substring(0, sb.toString().length() - 2);
+        return sb.toString().substring(0, sb.toString().length() - 1);
     }
 
 }

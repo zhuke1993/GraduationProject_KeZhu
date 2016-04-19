@@ -62,17 +62,17 @@
     <button class="button blue" onclick="stopPredict()">终止预测</button>
     <br><br>
     <h3>学习列表：</h3>
-    <button class="button blue" onclick="learning('001001001')">电灯1：开灯</button>
+    <button class="button blue" onclick="learning('11')">电灯1：开灯</button>
     <br><br>
-    <button class="button blue" onclick="learning('001001002')">电灯1：灭灯</button>
+    <button class="button blue" onclick="learning('12')">电灯1：灭灯</button>
     <br><br>
-    <button class="button blue" onclick="learning('001002001')">电灯2：开灯</button>
+    <button class="button blue" onclick="learning('21')">电灯2：开灯</button>
     <br><br>
-    <button class="button blue" onclick="learning('001002002')">电灯2：灭灯</button>
+    <button class="button blue" onclick="learning('22')">电灯2：灭灯</button>
     <br><br>
-    <button class="button blue" onclick="learning('001003001')">电视1：开启</button>
+    <button class="button blue" onclick="learning('31')">电视1：开启</button>
     <br><br>
-    <button class="button blue" onclick="learning('001003002')">电视1：关闭</button>
+    <button class="button blue" onclick="learning('31')">电视1：关闭</button>
     <br><br>
     <br><br>
 </div>

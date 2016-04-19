@@ -45,4 +45,13 @@ public class ArrayUtil {
             }
         }
     }
+
+    public static boolean isZero(double[] d) {
+        for (int i = 0; i < d.length; i++) {
+            if (d[i] != 0.0) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

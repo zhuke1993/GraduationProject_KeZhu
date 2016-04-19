@@ -34,18 +34,22 @@ public class DataSource2SvmProblemServiceImpl implements DataSource2SvmProblemSe
     }
 
     public double atof(String s) {
-        return Double.valueOf(s).doubleValue();
+        try {
+            return Double.valueOf(s).doubleValue();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return 0.0;
     }
 
 
     /**
      * 获取问题描述，从数据库进行获取，数据的存放格式为<lable>,<attr1>:<value1>,<attr2>:<value2>
      *
-     * @param param 参数值
      * @return 得到的svm_problem
      * @throws IOException
      */
-    public svm_problem readFromDB(svm_parameter param) throws IOException {
+    public svm_problem readFromDB() throws IOException {
         List<ActionRecord> actionRecordList = (List<ActionRecord>) hibernateTemplate.find("from ActionRecord", null);
 
         svm_problem svmProblem = new svm_problem();
@@ -54,7 +58,7 @@ public class DataSource2SvmProblemServiceImpl implements DataSource2SvmProblemSe
 
         for (int i = 0; i < actionRecordList.size(); i++) {
             String action = actionRecordList.get(i).getAction();
-            StringTokenizer st = new StringTokenizer(action, ",");
+            StringTokenizer st = new StringTokenizer(action, " ");
             int countTockens = st.countTokens();
 
             double label = atof(st.nextToken());
@@ -132,14 +136,11 @@ public class DataSource2SvmProblemServiceImpl implements DataSource2SvmProblemSe
         if (param.kernel_type == svm_parameter.PRECOMPUTED)
             for (int i = 0; i < prob.l; i++) {
                 if (prob.x[i][0].index != 0) {
-                    System.err
-                            .print("Wrong kernel matrix: first column must be 0:sample_serial_number\n");
+                    System.err.print("Wrong kernel matrix: first column must be 0:sample_serial_number\n");
                     System.exit(1);
                 }
-                if ((int) prob.x[i][0].value <= 0
-                        || (int) prob.x[i][0].value > max_index) {
-                    System.err
-                            .print("Wrong input format: sample_serial_number out of range\n");
+                if ((int) prob.x[i][0].value <= 0 || (int) prob.x[i][0].value > max_index) {
+                    System.err.print("Wrong input format: sample_serial_number out of range\n");
                     System.exit(1);
                 }
             }

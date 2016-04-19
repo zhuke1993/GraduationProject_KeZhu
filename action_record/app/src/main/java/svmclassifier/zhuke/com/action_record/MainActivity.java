@@ -75,12 +75,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         linearAcc = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
-        sensorManager.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_UI);
-        sensorManager.registerListener(this, linearAcc, SensorManager.SENSOR_DELAY_UI);
-        sensorManager.registerListener(this, gyroscopeSensor, SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, linearAcc, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, gyroscopeSensor, SensorManager.SENSOR_DELAY_FASTEST);
 
-        Thread thread = new Thread(new ActionSender(), "action_sender");
-        thread.start();
     }
 
     @Override
@@ -120,23 +118,31 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         super.onKeyDown(keyCode, event);
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            //填充数据
             SVMConfig.isUpdateBuffer = true;
+            //填充数据
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (SVMConfig.isUpdateBuffer) {
+                        try {
+                            ActionSender.updateBuffer();
+                            Thread.currentThread().sleep(SVMConfig.threadTime);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }).start();
         }
         return true;
     }
 
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         super.onKeyDown(keyCode, event);
+        SVMConfig.isUpdateBuffer = false;
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            try {
-                //发送数据
-                ActionSender.updateToSendArray();
-                ActionSender.initSocket();
-                ActionSender.sendAction(ActionSender.actionStrBuiler());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Thread thread = new Thread(new ActionSender());
+            thread.start();
         }
         return true;
     }

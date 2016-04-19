@@ -1,9 +1,13 @@
 package com.zhuke.svmclassifier.service;
 
+import com.zhuke.svmclassifier.entity.SVMParam;
 import libsvm.svm;
 import libsvm.svm_model;
+import libsvm.svm_problem;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +19,11 @@ import java.util.Properties;
  * 设置中心
  * Created by ZHUKE on 2016/3/31.
  */
+@Service
 public class SVMConfig {
+
+    @Autowired
+    private DataSource2SvmProblemService dataSource2SvmProblemService;
 
     private static Logger logger = LogManager.getLogger(SVMConfig.class);
 
@@ -117,7 +125,7 @@ public class SVMConfig {
      */
     public static double[][] ACTION_TEMP;
 
-    public static void initConfig() {
+    public void initConfig() {
         Properties properties = new Properties();
         try {
             properties.load(new FileInputStream(SVMConfig.class.getResource("/").getFile() + "svm_classifier.properties"));
@@ -132,7 +140,7 @@ public class SVMConfig {
             L = Integer.parseInt(properties.getProperty("conf.L"));
             R = Integer.parseInt(properties.getProperty("conf.R"));
             NOISE = Integer.parseInt(properties.getProperty("conf.NOISE"));
-            C = Integer.parseInt(properties.getProperty("conf.C"));
+            C = Double.parseDouble(properties.getProperty("conf.C"));
             G = Double.parseDouble(properties.getProperty("conf.G"));
 
             TEMP_STATE = 0;
@@ -152,7 +160,10 @@ public class SVMConfig {
             } catch (IOException e) {
                 logger.error("Field to create system file.", e);
             }
-            MODEL = svm.svm_load_model(new SVMConfig().getClass().getResource("/").getFile() + SVMConfig.MODELFILE_PATH);
+            svm_problem prob = dataSource2SvmProblemService.readFromDB();
+            if (prob.l != 0) {
+                SVMConfig.MODEL = svm.svm_train(prob, SVMParam.getParameter(SVMConfig.C, SVMConfig.G));
+            }
             logger.info("Successed to initiation system config.");
         } catch (IOException e) {
             logger.error("Field to load configuration file.", e);
