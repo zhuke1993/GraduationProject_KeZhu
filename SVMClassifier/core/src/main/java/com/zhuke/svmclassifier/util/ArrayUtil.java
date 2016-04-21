@@ -1,12 +1,10 @@
 package com.zhuke.svmclassifier.util;
 
-import com.zhuke.svmclassifier.service.SVMConfig;
-
 /**
  * Created by ZHUKE on 2016/4/18.
  */
 public class ArrayUtil {
-    public static void updateToPredictArray() {
+    /*public static void updateToPredictArray() {
         if (SVMConfig.TEMP_STATE < SVMConfig.R - SVMConfig.L + SVMConfig.NOISE) {
             //此时需要取历史数据
             int count = 0;
@@ -44,7 +42,7 @@ public class ArrayUtil {
                 SVMConfig.TO_LEARN[i] = SVMConfig.ACTION_TEMP[j - SVMConfig.NOISE];
             }
         }
-    }
+    }*/
 
     public static boolean isZero(double[] d) {
         for (int i = 0; i < d.length; i++) {

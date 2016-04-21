@@ -1,8 +1,6 @@
 package svmclassifier.zhuke.com.action_record;
 
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.io.PrintStream;
 import java.math.BigDecimal;
@@ -63,7 +61,7 @@ public class ActionSender implements Runnable {
      * @throws IOException
      */
     public static void sendAction(String message) throws IOException {
-        HttpURLConnection conn = (HttpURLConnection) new URL(SVMConfig.serverURL + "?action=" + URLEncoder.encode(message, "UTF-8")).openConnection();
+        HttpURLConnection conn = (HttpURLConnection) new URL(SVMConfig.serverActionURL + "?userId=" + SVMConfig.loginUserId + "&action=" + URLEncoder.encode(message, "UTF-8")).openConnection();
         conn.setRequestMethod("GET");
         conn.setReadTimeout(200);
         conn.setConnectTimeout(200);

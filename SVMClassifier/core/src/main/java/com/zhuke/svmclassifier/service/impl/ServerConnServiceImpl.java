@@ -6,10 +6,8 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -30,8 +28,8 @@ public class ServerConnServiceImpl implements ServerConnService {
 
         try {
             Properties properties = new Properties();
-            //properties.load(new FileInputStream(SVMConfig.class.getResource("/").getFile() + "/" + "svm_classifier.properties"));
-            properties.load(new FileInputStream("D:\\Users\\Administrator\\Documents\\GraduationProject_KeZhu\\SVMClassifier\\web\\src\\main\\resources\\svm_classifier.properties"));
+            properties.load(new FileInputStream(SVMConfig.class.getResource("/").getFile() + "/" + "svm_classifier.properties"));
+            //properties.load(new FileInputStream("D:\\Users\\Administrator\\Documents\\GraduationProject_KeZhu\\SVMClassifier\\web\\src\\main\\resources\\svm_classifier.properties"));
             selector = Selector.open();
             socketChannel = SocketChannel.open();
             socketChannel.configureBlocking(false);

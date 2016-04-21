@@ -1,9 +1,7 @@
 package com.zhuke.svmclassifier.controller;
 
-import com.zhuke.svmclassifier.service.DataRecordService;
-import com.zhuke.svmclassifier.service.LearningService;
-import com.zhuke.svmclassifier.service.PredictService;
-import com.zhuke.svmclassifier.service.SVMConfig;
+import com.zhuke.svmclassifier.entity.UserInfo;
+import com.zhuke.svmclassifier.service.*;
 import com.zhuke.svmclassifier.service.impl.LearningServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLDecoder;
+import java.util.Date;
 
 /**
  * Created by ZHUKE on 2016/3/31.
@@ -30,6 +29,9 @@ public class SVMController {
 
     @Autowired
     private PredictService predictService;
+
+    @Autowired
+    private UserInfoService userInfoService;
 
     @RequestMapping("/predict/start.do")
     public void startPredict(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -64,4 +66,36 @@ public class SVMController {
         response.getWriter().print("OK");
     }
 
+    @RequestMapping("/login.do")
+    public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String name = request.getParameter("name");
+        String password = request.getParameter("password");
+
+        UserInfo loginUser = userInfoService.login(name, password);
+
+        if (loginUser != null) {
+            response.getWriter().print(loginUser.getId());
+        } else {
+            response.getWriter().print("FAILED");
+        }
+    }
+
+    @RequestMapping("/register.do")
+    public void register(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            String name = request.getParameter("name");
+            String password = request.getParameter("password");
+
+            UserInfo userInfo = new UserInfo();
+            userInfo.setCreatedOn(new Date());
+            userInfo.setUserName(name);
+            userInfo.setPassword(password);
+
+            userInfoService.register(userInfo);
+            response.getWriter().print("OK");
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.getWriter().print("FAILED");
+        }
+    }
 }

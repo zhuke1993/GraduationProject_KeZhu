@@ -1,7 +1,6 @@
 package com.zhuke.svmclassifier.listener;
 
 import com.zhuke.svmclassifier.service.SVMConfig;
-import com.zhuke.svmclassifier.service.ServerConnService;
 import com.zhuke.svmclassifier.service.impl.DataRecordServiceImpl;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;

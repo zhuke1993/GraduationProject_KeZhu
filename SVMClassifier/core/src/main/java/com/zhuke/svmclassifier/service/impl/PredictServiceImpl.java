@@ -29,22 +29,12 @@ public class PredictServiceImpl implements PredictService {
         logger.info("..........预测线程已启动..........");
 
         while (SVMConfig.IS_PREDICTING == 1) {
-            //ArrayUtil.updateToPredictArray();
-            // 将待预测数组进行格式化处理，将各属性值进行调整
-           /* double[] t = new double[(SVMConfig.R - SVMConfig.L) * SVMConfig.FEATURE_NUM];
-            String actions = "";
-            for (int i = 0; i < SVMConfig.FEATURE_NUM; i++) {
-                for (int j = 0; j < SVMConfig.R - SVMConfig.L; j++) {
-                    t[i * (SVMConfig.R - SVMConfig.L) + j] = SVMConfig.TO_PERDICT[j][i];
-                    actions = actions + t[i] + ",";
-                }
-            }*/
 
-            if (!ArrayUtil.isZero(SVMConfig.getActionArray())) {
-                double[] t = new double[SVMConfig.ACTION_ARRAY.length];
-                System.arraycopy(SVMConfig.ACTION_ARRAY, 0, t, 0, t.length);
+            if (!ArrayUtil.isZero(SVMConfig.getToPerdict())) {
+                double[] t = new double[SVMConfig.TO_PERDICT.length];
+                System.arraycopy(SVMConfig.TO_PERDICT, 0, t, 0, t.length);
 
-                Arrays.fill(SVMConfig.getActionArray(), 0);
+                Arrays.fill(SVMConfig.getToPerdict(), 0);
                 StringBuffer sb = new StringBuffer();
                 for (int i = 0; i < t.length; i++) {
                     sb.append(t[i] + ",");

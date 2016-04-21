@@ -15,7 +15,6 @@ public class SHConfig {
      */
     public static Vector<Device> deviceVector = new Vector<Device>(16);
 
-
     /**
      * 设备状态列表
      */

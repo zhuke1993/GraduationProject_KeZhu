@@ -7,6 +7,12 @@
     tools:context="svmclassifier.zhuke.com.action_record.MainActivity">
 
     <TextView
+        android:id="@+id/info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50px" />
+
+    <TextView
         android:id="@+id/timestampv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -66,7 +72,7 @@
         android:layout_height="wrap_content"
         android:textSize="50px" />
 
-    <EditText
+    <!--<EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="number"
@@ -77,5 +83,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="确定"
-        android:id="@+id/threadTimeButton" />
+        android:id="@+id/threadTimeButton" />-->
 </LinearLayout>

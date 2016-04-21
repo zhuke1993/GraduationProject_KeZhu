@@ -9,11 +9,15 @@ public class SVMConfig {
 
     static int serverPort = 8999;
 
-    static String serverURL = "http://zhuke1993.vicp.cc:8080/action_record.do";
+    static String serverActionURL = "http://zhuke1993.vicp.cc:8080/action_record.do";
+
+    public static String serverLoginURL = "http://zhuke1993.vicp.cc:8080/login.do";
 
     static long threadTime = 100;
 
     public static boolean isUpdateBuffer = false;
+
+    public static int loginUserId = 0;
 
     /**
      * 特征数

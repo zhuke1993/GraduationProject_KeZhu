@@ -8,7 +8,6 @@ import com.zhuke.svmclassifier.service.SVMConfig;
 import com.zhuke.svmclassifier.util.ArrayUtil;
 import libsvm.svm;
 import libsvm.svm_problem;
-import libsvm.svm_parameter;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,20 +43,11 @@ public class LearningServiceImpl implements LearningService {
         if (!StringUtils.isEmpty(lable)) {
             logger.info("收到学习指令:" + lable);
 
-           /* ArrayUtil.updateToLearnArray();
+            if (!ArrayUtil.isZero(SVMConfig.getToLearn())) {
+                double[] t = new double[SVMConfig.TO_LEARN.length];
+                System.arraycopy(SVMConfig.TO_LEARN, 0, t, 0, t.length);
 
-            // 将待预测数组进行格式化处理，将各属性值进行调整
-            double[] t = new double[(SVMConfig.R - SVMConfig.L) * SVMConfig.FEATURE_NUM];
-            for (int i = 0; i < SVMConfig.FEATURE_NUM; i++) {
-                for (int j = 0; j < SVMConfig.R - SVMConfig.L; j++) {
-                    t[i * (SVMConfig.R - SVMConfig.L) + j] = SVMConfig.TO_LEARN[j][i];
-                }
-            }*/
-            if (!ArrayUtil.isZero(SVMConfig.getActionArray())) {
-                double[] t = new double[SVMConfig.ACTION_ARRAY.length];
-                System.arraycopy(SVMConfig.ACTION_ARRAY, 0, t, 0, t.length);
-
-                Arrays.fill(SVMConfig.getActionArray(), 0);
+                Arrays.fill(SVMConfig.getToLearn(), 0);
 
                 //将数据拼接成字符串，数据格式为 <lable>,<attr1>:<value1>,<attr2>:<value2>
                 String actionStr = lable;
@@ -71,7 +61,7 @@ public class LearningServiceImpl implements LearningService {
                 try {
                     //对model进行再次训练
                     svm_problem prob = dataSource2SvmProblemService.readFromDB();
-                    SVMConfig.MODEL = svm.svm_train(prob, SVMParam.getParameter(SVMConfig.C, SVMConfig.G));
+                    SVMConfig.MODEL = svm.svm_train(prob, SVMParam.customize(SVMConfig.C, SVMConfig.G));
                     svm.svm_save_model(this.getClass().getResource("/").getFile() + SVMConfig.MODELFILE_PATH, SVMConfig.MODEL);
                     logger.info("SVM学习结束，new model = " + SVMConfig.MODEL.toString());
                 } catch (IOException e) {

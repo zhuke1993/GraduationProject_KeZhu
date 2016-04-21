@@ -33,8 +33,6 @@ public class FileUtil {
      * @return
      */
     public static boolean iniFile() {
-
-
         return true;
     }
 
