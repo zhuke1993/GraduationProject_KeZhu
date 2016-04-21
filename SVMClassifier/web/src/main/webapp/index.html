@@ -15,13 +15,18 @@
     <link rel="stylesheet" href="assets/css/amazeui.min.css"/>
     <link rel="stylesheet" href="assets/css/admin.css">
     <script type="text/javascript">
+
+        if (sessionStorage.getItem("userId") == null || sessionStorage.getItem("userId") == "") {
+            window.location.href = "login.html";
+        }
+
         function startPredict() {
             jQuery.ajax({
                 url: '/svmclassifier/predict/start.do',
                 type: 'post',
                 dataType: 'text',
                 data: {
-                    userId : window.sessionStorage.getItem("userId")
+                    userId: window.sessionStorage.getItem("userId")
                 },
                 success: function (data) {
                     alert(data);
@@ -35,7 +40,7 @@
                 type: 'post',
                 dataType: 'text',
                 data: {
-                    userId : window.sessionStorage.getItem("userId")
+                    userId: window.sessionStorage.getItem("userId")
                 },
                 success: function (data) {
                     alert(data);
@@ -50,7 +55,7 @@
                 dataType: 'text',
                 data: {
                     'lable': lable,
-                    userId : window.sessionStorage.getItem("userId")
+                    userId: window.sessionStorage.getItem("userId")
                 },
                 success: function (data) {
                     alert(data);
@@ -76,7 +81,9 @@
         <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
             <li class="am-dropdown" data-am-dropdown>
                 <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
-                    <span class="am-icon-users"></span>管理员：<script>document.write(sessionStorage.getItem("userId"))</script><span class="am-icon-caret-down"></span>
+                    <span class="am-icon-users"></span>管理员：
+                    <script>document.write(sessionStorage.getItem("userId"))</script>
+                    <span class="am-icon-caret-down"></span>
                 </a>
                 <ul class="am-dropdown-content">
                     <li><a href="#"><span class="am-icon-power-off"></span> 退出</a></li>
