@@ -1,11 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: ZHUKE
-  Date: 2016/3/31
-  Time: 20:40
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -15,10 +7,12 @@
     <script type="text/javascript">
         function startPredict() {
             jQuery.ajax({
-                url: '/predict/start.do',
+                url: '/svmclassifier/predict/start.do',
                 type: 'post',
                 dataType: 'text',
-                data: {},
+                data: {
+                    userId : window.sessionStorage.getItem("userId")
+                },
                 success: function (data) {
                     alert(data);
                 }
@@ -27,10 +21,12 @@
 
         function stopPredict() {
             jQuery.ajax({
-                url: '/predict/stop.do',
+                url: '/svmclassifier/predict/stop.do',
                 type: 'post',
                 dataType: 'text',
-                data: {},
+                data: {
+                    userId : window.sessionStorage.getItem("userId")
+                },
                 success: function (data) {
                     alert(data);
                 }
@@ -39,11 +35,12 @@
 
         function learning(lable) {
             jQuery.ajax({
-                url: '/learning.do',
+                url: '/svmclassifier/learning.do',
                 type: 'post',
                 dataType: 'text',
                 data: {
-                    'lable': lable
+                    'lable': lable,
+                    userId : window.sessionStorage.getItem("userId")
                 },
                 success: function (data) {
                     alert(data);

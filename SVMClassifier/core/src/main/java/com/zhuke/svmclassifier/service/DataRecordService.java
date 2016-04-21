@@ -6,5 +6,5 @@ package com.zhuke.svmclassifier.service;
  */
 public interface DataRecordService{
 
-    public void dataRecieve(String acc);
+    public void dataRecieve(Long userId, String acc);
 }

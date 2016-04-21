@@ -22,11 +22,6 @@ public class SVMClassifierListener extends ContextLoaderListener {
             super.contextInitialized(event);
             ApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(event.getServletContext());
 
-           /* ServerConnService serverConnService = applicationContext.getBean(ServerConnService.class);
-            serverConnService.getServerConn();*/
-            DataRecordServiceImpl serverConnService = applicationContext.getBean(DataRecordServiceImpl.class);
-            ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) applicationContext.getBean("threadPoolExecutor");
-            threadPoolExecutor.execute(serverConnService);
             SVMConfig svmConfig = applicationContext.getBean(SVMConfig.class);
             svmConfig.initConfig();
         } catch (Exception e) {

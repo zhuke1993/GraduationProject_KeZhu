@@ -175,17 +175,16 @@ public class LoginActivity extends Activity implements OnClickListener, OnDismis
                     try {
                         HttpUtil.login(mIdString, mPwdString);
                         Thread.sleep(1000);
+                        showLoginingDlg();
                         if (SVMConfig.loginUserId != 0) {
                             closeLoginingDlg();// 关闭对话框
                             Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent();
                             intent.setClass(this, MainActivity.class);
                             startActivity(intent);
-                            finish();
                         } else {
-                            //closeLoginingDlg();// 关闭对话框
+                            closeLoginingDlg();// 关闭对话框
                             Toast.makeText(this, "登录失败", Toast.LENGTH_SHORT).show();
-                            finish();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

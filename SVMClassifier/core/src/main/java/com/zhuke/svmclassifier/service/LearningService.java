@@ -10,5 +10,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface LearningService {
-    void learning(String lable);
+    void learning(Long userId, String lable);
 }

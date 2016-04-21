@@ -1,5 +1,6 @@
 package com.zhuke.svmclassifier.service.impl;
 
+import com.zhuke.svmclassifier.config.SystemConfig;
 import com.zhuke.svmclassifier.entity.ActionRecord;
 import com.zhuke.svmclassifier.entity.SVMParam;
 import com.zhuke.svmclassifier.service.DataSource2SvmProblemService;
@@ -19,6 +20,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 
 
 /**
@@ -38,16 +40,17 @@ public class LearningServiceImpl implements LearningService {
     private DataSource2SvmProblemService dataSource2SvmProblemService;
 
     @Transactional
-    public void learning(String lable) {
+    public void learning(Long userId, String lable) {
         Assert.notNull(lable);
         if (!StringUtils.isEmpty(lable)) {
+            SVMConfig svmConfig = SystemConfig.getSVMConfig(userId);
             logger.info("收到学习指令:" + lable);
 
-            if (!ArrayUtil.isZero(SVMConfig.getToLearn())) {
-                double[] t = new double[SVMConfig.TO_LEARN.length];
-                System.arraycopy(SVMConfig.TO_LEARN, 0, t, 0, t.length);
+            if (!ArrayUtil.isZero(svmConfig.getToLearn())) {
+                double[] t = new double[svmConfig.TO_LEARN.length];
+                System.arraycopy(svmConfig.TO_LEARN, 0, t, 0, t.length);
 
-                Arrays.fill(SVMConfig.getToLearn(), 0);
+                Arrays.fill(svmConfig.getToLearn(), 0);
 
                 //将数据拼接成字符串，数据格式为 <lable>,<attr1>:<value1>,<attr2>:<value2>
                 String actionStr = lable;
@@ -56,14 +59,17 @@ public class LearningServiceImpl implements LearningService {
                 }
                 ActionRecord actionRecord = new ActionRecord();
                 actionRecord.setAction(actionStr);
+                actionRecord.setUserId(userId);
+                actionRecord.setCreatedOn(new Date());
+
                 hibernateTemplate.save(actionRecord);
-                logger.info("数据已保存：" + actionStr);
+                logger.info("数据已保存：userId = " + userId + " , action = " + actionStr);
                 try {
                     //对model进行再次训练
-                    svm_problem prob = dataSource2SvmProblemService.readFromDB();
-                    SVMConfig.MODEL = svm.svm_train(prob, SVMParam.customize(SVMConfig.C, SVMConfig.G));
-                    svm.svm_save_model(this.getClass().getResource("/").getFile() + SVMConfig.MODELFILE_PATH, SVMConfig.MODEL);
-                    logger.info("SVM学习结束，new model = " + SVMConfig.MODEL.toString());
+                    svm_problem prob = dataSource2SvmProblemService.readFromDB(userId);
+                    svmConfig.MODEL = svm.svm_train(prob, SVMParam.customize(svmConfig.C, svmConfig.G));
+                    svm.svm_save_model(this.getClass().getResource("/").getFile() + svmConfig.MODELFILE_PATH + "_" + userId, svmConfig.MODEL);
+                    logger.info("SVM学习结束，new model for userId : " + userId + " = " + svmConfig.MODEL.toString());
                 } catch (IOException e) {
                     logger.error("学习线程发生异常", e);
                 }

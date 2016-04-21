@@ -49,8 +49,8 @@ public class DataSource2SvmProblemServiceImpl implements DataSource2SvmProblemSe
      * @return 得到的svm_problem
      * @throws IOException
      */
-    public svm_problem readFromDB() throws IOException {
-        List<ActionRecord> actionRecordList = (List<ActionRecord>) hibernateTemplate.find("from ActionRecord", null);
+    public svm_problem readFromDB(Long userId) throws IOException {
+        List<ActionRecord> actionRecordList = (List<ActionRecord>) hibernateTemplate.find("from ActionRecord a where a.userId = ?", userId);
 
         svm_problem svmProblem = new svm_problem();
         ArrayList<svm_node[]> X = new ArrayList<svm_node[]>();

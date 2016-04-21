@@ -21,7 +21,7 @@ public interface DataSource2SvmProblemService {
      * @return 得到的svm_problem
      * @throws IOException
      */
-    public svm_problem readFromDB() throws IOException;
+    public svm_problem readFromDB(Long userId) throws IOException;
 
 
     /**

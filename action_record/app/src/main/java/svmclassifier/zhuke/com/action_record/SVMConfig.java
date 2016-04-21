@@ -9,9 +9,9 @@ public class SVMConfig {
 
     static int serverPort = 8999;
 
-    static String serverActionURL = "http://zhuke1993.vicp.cc:8080/action_record.do";
+    static String serverActionURL = "http://zhuke1993.vicp.cc:8080/svmclassifier/action_record.do";
 
-    public static String serverLoginURL = "http://zhuke1993.vicp.cc:8080/login.do";
+    public static String serverLoginURL = "http://zhuke1993.vicp.cc:8080/svmclassifier/login.do";
 
     static long threadTime = 100;
 

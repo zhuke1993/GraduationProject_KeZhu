@@ -3,6 +3,9 @@
          xmlns="http://java.sun.com/xml/ns/j2ee"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
+    <welcome-file-list>
+        <welcome-file>login.html</welcome-file>
+    </welcome-file-list>
 
     <display-name>naquhua</display-name>
     <!--配置spring初始化参数-->
@@ -10,6 +13,16 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath:applicationContext.xml</param-value>
     </context-param>
+
+    <filter>
+        <filter-name>svmclassifier</filter-name>
+        <filter-class>com.zhuke.svmclassifier.filter.SVMFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>svmclassifier</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <!--配置Spring启动时的监听器-->
     <listener>
         <listener-class>com.zhuke.svmclassifier.listener.SVMClassifierListener</listener-class>

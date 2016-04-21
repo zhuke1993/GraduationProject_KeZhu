@@ -1,5 +1,6 @@
 package com.zhuke.svmclassifier.service.impl;
 
+import com.zhuke.svmclassifier.config.SystemConfig;
 import com.zhuke.svmclassifier.service.DataRecordService;
 import com.zhuke.svmclassifier.service.SVMConfig;
 import org.apache.log4j.LogManager;
@@ -18,17 +19,19 @@ public class DataRecordServiceImpl implements DataRecordService {
 
     Logger logger = LogManager.getLogger(DataRecordServiceImpl.class);
 
-    public void dataRecieve(String acc) {
+    public void dataRecieve(Long userId, String acc) {
+        SVMConfig svmConfig = SystemConfig.getSVMConfig(userId);
 
-        logger.info("得到客户端发送的请求：action = " + acc);
+        logger.info("得到客户端发送的请求：userId = " + userId + ", action = " + acc);
         StringTokenizer st = new StringTokenizer(acc, ",");
         int count = st.countTokens();
-        double[] d = new double[(SVMConfig.R - SVMConfig.L) * SVMConfig.FEATURE_NUM];
+        double[] d = new double[(svmConfig.R - svmConfig.L) * svmConfig.FEATURE_NUM];
         for (int i = 0; i < count; i++) {
             d[i] = Double.parseDouble(st.nextToken());
         }
-        SVMConfig.setToLearn(d);
-        SVMConfig.setToPerdict(d);
+        svmConfig.setToLearn(d);
+        svmConfig.setToPerdict(d);
+        SystemConfig.runningUserMap.put(userId, svmConfig);
     }
 
     private double[] actionNormalize(String action) {

@@ -24,7 +24,7 @@ public class HttpUtil implements Runnable {
 
     public static void login(final String name, final String password) throws IOException {
         HttpUtil httpUtil = new HttpUtil();
-        httpUtil.setUrl(SVMConfig.serverLoginURL + "?name=" + URLEncoder.encode(name, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8"));
+        httpUtil.setUrl(SVMConfig.serverLoginURL + "?username=" + URLEncoder.encode(name, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8"));
         Thread thread = new Thread(httpUtil);
         thread.start();
     }
