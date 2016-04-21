@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLDecoder;
 import java.util.Date;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Created by ZHUKE on 2016/3/31.
@@ -33,13 +34,16 @@ public class SVMController {
     @Autowired
     private UserInfoService userInfoService;
 
+    @Autowired
+    private ThreadPoolExecutor threadPoolExecutor;
+
     @RequestMapping("/predict/start.do")
     public void startPredict(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Long userId = Long.parseLong(request.getParameter("userId"));
         SVMConfig svmConfig = SystemConfig.getSVMConfig(userId);
         if (SystemConfig.IS_PREDICTING == 0) {
             SystemConfig.IS_PREDICTING = 1;
-            predictService.predict();
+            threadPoolExecutor.execute(predictService);
             response.getWriter().print("预测服务开启成功。");
         } else {
             response.getWriter().print("预测服务正在运行中，无需重复启动。");

@@ -69,4 +69,8 @@ public class PredictServiceImpl implements PredictService {
             }
         }
     }
+
+    public void run() {
+        predict();
+    }
 }

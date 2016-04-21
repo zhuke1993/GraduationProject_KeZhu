@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private TextView gZ;
 
     private TextView info;
+    private TextView loginUser;
 
     private TextView timestampv;
 
@@ -65,8 +66,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
             timestampv = (TextView) findViewById(R.id.timestampv);
             info = (TextView) findViewById((R.id.info));
+            loginUser = (TextView) findViewById(R.id.loginUser);
 
-            info.setText(getResources().getString(R.string.info));
+            info.setText(getResources().getString(R.string.info) + "\n");
+            loginUser.setText(getResources().getString(R.string.loginUser) + SVMConfig.loginUserId + "\n");
 
             sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
@@ -84,30 +87,30 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
-            aX.setText(getResources().getString(R.string.ax) + String.valueOf(new BigDecimal(event.values[0]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()));
-            aY.setText(getResources().getString(R.string.ay) + String.valueOf(new BigDecimal(event.values[1]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()));
-            aZ.setText(getResources().getString(R.string.az) + String.valueOf(new BigDecimal(event.values[2]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()));
+            aX.setText(getResources().getString(R.string.ax) + String.valueOf(new BigDecimal(event.values[0]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()) + "\n");
+            aY.setText(getResources().getString(R.string.ay) + String.valueOf(new BigDecimal(event.values[1]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()) + "\n");
+            aZ.setText(getResources().getString(R.string.az) + String.valueOf(new BigDecimal(event.values[2]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()) + "\n");
 
             ActionRecorder.setAx(new BigDecimal(event.values[0]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue());
             ActionRecorder.setAy(new BigDecimal(event.values[1]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue());
             ActionRecorder.setAz(new BigDecimal(event.values[2]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue());
         } else if (event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
-            oX.setText(getResources().getString(R.string.ox) + String.valueOf(new BigDecimal(event.values[0]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()));
-            oY.setText(getResources().getString(R.string.oy) + String.valueOf(new BigDecimal(event.values[1]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()));
-            oZ.setText(getResources().getString(R.string.oz) + String.valueOf(new BigDecimal(event.values[2]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()));
+            oX.setText(getResources().getString(R.string.ox) + String.valueOf(new BigDecimal(event.values[0]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()) + "\n");
+            oY.setText(getResources().getString(R.string.oy) + String.valueOf(new BigDecimal(event.values[1]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()) + "\n");
+            oZ.setText(getResources().getString(R.string.oz) + String.valueOf(new BigDecimal(event.values[2]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()) + "\n");
 
             ActionRecorder.setOy(new BigDecimal(event.values[1]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue());
             ActionRecorder.setOz(new BigDecimal(event.values[2]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue());
         } else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            gX.setText(getResources().getString(R.string.gx) + String.valueOf(new BigDecimal(event.values[0]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()));
-            gY.setText(getResources().getString(R.string.gy) + String.valueOf(new BigDecimal(event.values[1]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()));
-            gZ.setText(getResources().getString(R.string.gz) + String.valueOf(new BigDecimal(event.values[2]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()));
+            gX.setText(getResources().getString(R.string.gx) + String.valueOf(new BigDecimal(event.values[0]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()) + "\n");
+            gY.setText(getResources().getString(R.string.gy) + String.valueOf(new BigDecimal(event.values[1]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()) + "\n");
+            gZ.setText(getResources().getString(R.string.gz) + String.valueOf(new BigDecimal(event.values[2]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()) + "\n");
 
             ActionRecorder.setGx(new BigDecimal(event.values[0]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue());
             ActionRecorder.setGy(new BigDecimal(event.values[1]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue());
             ActionRecorder.setGz(new BigDecimal(event.values[2]).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue());
         }
-        timestampv.setText(getResources().getString(R.string.timestamp) + String.valueOf(System.currentTimeMillis()));
+        timestampv.setText(getResources().getString(R.string.timestamp) + String.valueOf(System.currentTimeMillis()) + "\n");
     }
 
     @Override
