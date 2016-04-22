@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class SVMFilter implements Filter {
 
-    private Logger logger = LogManager.getLogger(SVMFilter.class);
+    // private Logger logger = LogManager.getLogger(SVMFilter.class);
 
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -24,7 +24,7 @@ public class SVMFilter implements Filter {
 
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-        logger.info("A new http connect, client host:" + request.getRemoteAddr() + ", request the url:" + ((HttpServletRequest) request).getRequestURL());
+        //logger.info("A new http connect, client host:" + request.getRemoteAddr() + ", request the url:" + ((HttpServletRequest) request).getRequestURL());
         chain.doFilter(request, response);
 
     }

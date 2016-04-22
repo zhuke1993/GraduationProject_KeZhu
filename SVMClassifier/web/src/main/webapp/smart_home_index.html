@@ -3,94 +3,113 @@
 <head>
     <title>智能家居模拟显示模块 </title>
     <link href="css/style.css" rel='stylesheet' type='text/css'/>
-    <!-- Custom Theme files -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="keywords"
-          content="Flat Precious Tables Design ,Flat Pricing Tables Design ,Popup Pricing Tables Design,Clean Pricing Tables Design "
-          ./>
-    <script type="application/x-javascript"> addEventListener("load", function () {
-        setTimeout(hideURLbar, 0);
-    }, false);
-    function hideURLbar() {
-        window.scrollTo(0, 1);
-    } </script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <!--webfonts-->
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600,700'
-          rel='stylesheet' type='text/css'>
-    <!--//webfonts-->
-</head>
-<body>
-<!--start-pricing-tablel-->
-<script src="js/jquery.magnific-popup.js" type="text/javascript"></script>
-<script type="text/javascript" src="js/modernizr.custom.53451.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.magnific-popup.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/modernizr.custom.53451.js"></script>
+    <script>
 
-<script>
-    $(document).ready(function () {
-        $('.popup-with-zoom-anim').magnificPopup({
-            type: 'inline',
-            fixedContentPos: false,
-            fixedBgPos: true,
-            overflowY: 'auto',
-            closeBtnInside: true,
-            preloader: false,
-            midClick: true,
-            removalDelay: 300,
-            mainClass: 'my-mfp-zoom-in'
+        if (sessionStorage.getItem("userId") == null || sessionStorage.getItem("userId") == "") {
+            window.location.href = "login.html";
+        }
+
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+        $(document).ready(function () {
+            $('.popup-with-zoom-anim').magnificPopup({
+                type: 'inline',
+                fixedContentPos: false,
+                fixedBgPos: true,
+                overflowY: 'auto',
+                closeBtnInside: true,
+                preloader: false,
+                midClick: true,
+                removalDelay: 300,
+                mainClass: 'my-mfp-zoom-in'
+            });
+
         });
 
-    });
-
-
-    function test() {
-//        $('#light1').text('zhuke');
-//        $('#light1-1').css("background-color", "gray");
-//        alert($('#light1-1').css("background-color"));
-//
-       jsonStr = "";
-    }
-
-    function updateStatus() {
-
-    }
-
-
-</script>
-
+        function updateStatus() {
+            jQuery.ajax({
+                url: '/svmclassifier/smarthome/messages.do',
+                type: 'post',
+                dataType: 'text',
+                data: {
+                    userId: window.sessionStorage.getItem("userId")
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data != null) {
+                        //更新显示
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i].msg == 11.0) {
+                                $("#light1-text").css("background-color", "blue");
+                                $("#light1-status").text("开启")
+                            } else if (data[i].msg == 12.0) {
+                                $("#light1-text").css("background-color", "gray");
+                                $("#light1-status").text("关闭")
+                            } else if (data[i].msg == 21.0) {
+                                $("#light2-text").css("background-color", "blue");
+                                $("#light2-status").text("开启")
+                            } else if (data[i].msg == 22.0) {
+                                $("#light2-text").css("background-color", "gray");
+                                $("#light2-status").text("关闭")
+                            } else if (data[i].msg == 31.0) {
+                                $("#tv1-text").css("background-color", "blue");
+                                $("#tv1-status").text("开启")
+                            } else if (data[i].msg == 32.0) {
+                                $("#tv1-text").css("background-color", "gray");
+                                $("#tv1-status").text("关闭")
+                            }
+                        }
+                    }
+                }
+            });
+            setTimeout("updateStatus();", 600);
+        }
+        updateStatus();
+    </script>
+</head>
+<body>
 <div class="pricing-plans">
     <div class="wrap">
         <div class="price-head">
             <h1>智能家居模拟显示模块</h1>
         </div>
         <div class="pricing-grids">
-            <div class="pricing-grid1" onclick="test()">
-                <div class="price-value two" id="light1-1">
+            <div class="pricing-grid1">
+                <div class="price-value two" id="light1-text">
                     <h5>电灯1</h5>
                 </div>
                 <div class="price-bg">
                     <ul>
-                        <li><a id="light1">开启</a></li>
+                        <li><a id="light1-status">开启</a></li>
                     </ul>
                 </div>
             </div>
             <div class="pricing-grid2">
-                <div class="price-value two">
+                <div class="price-value two" id="light2-text">
                     <h5>电灯2</h5>
                 </div>
                 <div class="price-bg">
                     <ul>
-                        <li><a href="#">开启</a></li>
+                        <li><a id="light2-status">开启</a></li>
                     </ul>
                 </div>
             </div>
             <div class="pricing-grid3">
-                <div class="price-value two">
+                <div class="price-value two" id="tv1-text">
                     <h5>电视1</h5>
                 </div>
                 <div class="price-bg">
                     <ul>
-                        <li><a href="#">开启</a></li>
+                        <li><a id="tv1-status">开启</a></li>
                     </ul>
                 </div>
             </div>

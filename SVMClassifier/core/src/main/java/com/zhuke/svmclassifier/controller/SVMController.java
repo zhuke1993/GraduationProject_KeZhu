@@ -122,10 +122,15 @@ public class SVMController {
         }
     }
 
-    @RequestMapping(value = "/smarthome/messages.do", method = RequestMethod.GET)
+    @RequestMapping(value = "/smarthome/messages.do")
     public void getMessages(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Long userId = Long.parseLong(request.getParameter("userId"));
-        List<Message> messages = SystemConfig.getMessage(userId);
-        response.getWriter().write(new Gson().toJson(messages));
+        try {
+            Long userId = Long.parseLong(request.getParameter("userId"));
+            List<Message> messages = SystemConfig.getMessage(userId);
+            response.getWriter().write(new Gson().toJson(messages));
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.getWriter().write("服务器繁忙,errMsg=" + e.getMessage()+"\n请退出重新登陆。");
+        }
     }
 }
