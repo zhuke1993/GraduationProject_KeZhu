@@ -12,6 +12,7 @@
         <module>core</module>
         <module>web</module>
         <module>data</module>
+        <module>smarthome</module>
     </modules>
 
     <properties>

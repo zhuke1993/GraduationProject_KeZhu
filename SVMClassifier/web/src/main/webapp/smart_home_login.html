@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>智能家居模拟显示模块-系统登陆</title>
+    <link rel="stylesheet" href="assets/css/amazeui.min.css"/>
+    <style>
+        .header {
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 200%;
+            color: #333;
+            margin-top: 30px;
+        }
+
+        .header p {
+            font-size: 14px;
+        }
+    </style>
+    <script src="assets/js/jquery.min.js"></script>
+    <script>
+        function login() {
+            $.ajax({
+                url: "http://zhuke1993.vicp.cc:8080/smarthome/login.do",
+                data: {
+                    username: $("#name").val(),
+                    password: $("#password").val()
+                },
+                success: function (msg) {
+                    if (msg == 'FAILED') {
+                        errorMessage = "登陆失败";
+                        $("#error_message").html(errorMessage);
+                    } else {
+                        window.sessionStorage.setItem("userId", msg);
+                        window.location.href = 'smart_home_index.html';
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div class="header">
+    <div class="am-g">
+        <h1>智能家居模拟显示模块-系统登陆</h1>
+    </div>
+    <hr/>
+</div>
+<div class="am-g">
+    <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
+
+        <br>
+        <br>
+
+        <form method="post" class="am-form">
+            <label>用户名:</label>
+            <input type="text" name="" id="name" value="">
+            <br>
+            <label for="password">密码:</label>
+            <input type="password" name="" id="password" value="">
+            <br>
+            <br/>
+            <div class="am-cf">
+                <input onclick="smart_home_login()" type="button" name="" value="登 录"
+                       class="am-btn am-btn-primary am-btn-sm am-fl">
+            </div>
+            <span id="error_message" style="color: red"></span>
+        </form>
+        <hr>
+        <p>朱轲@2016 重庆邮电大学, All Rights Reserved.</p>
+    </div>
+</div>
+</body>
+</html>

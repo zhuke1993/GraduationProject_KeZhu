@@ -1,5 +1,7 @@
 package com.zhuke.svmclassifier.controller;
 
+import com.google.gson.Gson;
+import com.zhuke.smart_home.central.SHConfig;
 import com.zhuke.svmclassifier.config.SystemConfig;
 import com.zhuke.svmclassifier.entity.UserInfo;
 import com.zhuke.svmclassifier.service.*;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -103,6 +106,17 @@ public class SVMController {
         } catch (Exception e) {
             e.printStackTrace();
             response.getWriter().print("FAILED");
+        }
+    }
+
+    @RequestMapping(value = "/smarthome/device_list.do", method = RequestMethod.GET)
+    public void getDeviceVector(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Gson gson = new Gson();
+            String deviceListJson = gson.toJson(SHConfig.deviceVector);
+            response.getWriter().print(deviceListJson);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
