@@ -45,6 +45,7 @@
                 },
                 success: function (data) {
                     //alert(data);
+                    data = JSON.parse(data);
                     if (data != null) {
                         //更新显示
                         for (var i = 0; i < data.length; i++) {

@@ -3,6 +3,7 @@ package com.zhuke.svmclassifier.service.impl;
 import com.zhuke.svmclassifier.config.SystemConfig;
 import com.zhuke.svmclassifier.entity.Message;
 import com.zhuke.svmclassifier.service.MessageSendService;
+import com.zhuke.svmclassifier.service.MessageService;
 import com.zhuke.svmclassifier.service.PredictService;
 import com.zhuke.svmclassifier.service.SVMConfig;
 import com.zhuke.svmclassifier.util.ArrayUtil;
@@ -13,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -32,7 +34,7 @@ public class PredictServiceImpl implements PredictService {
     private HibernateTemplate hibernateTemplate;
 
     @Autowired
-    private MessageSendService messageSendService;
+    private MessageService messageService;
 
     public void predict() {
         logger.info("..........预测线程已启动..........");
@@ -65,7 +67,7 @@ public class PredictServiceImpl implements PredictService {
                     // 消息中心注册该条控制消息
                     Message message = new Message(userId, result, new Date());
                     SystemConfig.messageVector.add(message);
-                    hibernateTemplate.save(message);
+                    messageService.addMessage(message);
 
                     logger.info("待预测数据,userId = " + userId + ", action = " + sb.toString());
                     logger.info("得到预测值, userId = " + userId + ", result = " + result);
