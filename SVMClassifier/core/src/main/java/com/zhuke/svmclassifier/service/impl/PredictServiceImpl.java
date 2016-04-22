@@ -1,6 +1,7 @@
 package com.zhuke.svmclassifier.service.impl;
 
 import com.zhuke.svmclassifier.config.SystemConfig;
+import com.zhuke.svmclassifier.entity.Message;
 import com.zhuke.svmclassifier.service.MessageSendService;
 import com.zhuke.svmclassifier.service.PredictService;
 import com.zhuke.svmclassifier.service.SVMConfig;
@@ -10,9 +11,11 @@ import libsvm.svm_node;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -24,6 +27,9 @@ import java.util.Set;
 @Service
 public class PredictServiceImpl implements PredictService {
     private Logger logger = LogManager.getLogger(PredictServiceImpl.class);
+
+    @Autowired
+    private HibernateTemplate hibernateTemplate;
 
     @Autowired
     private MessageSendService messageSendService;
@@ -56,8 +62,11 @@ public class PredictServiceImpl implements PredictService {
                     }
                     // 进行预测,得出预测值
                     double result = svm.svm_predict(svmConfig.MODEL, nodes);
-                    // 向局域网内的所有的家电广播得到的结果值
-                    //messageSendService.sendMessage(String.valueOf(result));
+                    // 消息中心注册该条控制消息
+                    Message message = new Message(userId, result, new Date());
+                    SystemConfig.messageVector.add(message);
+                    hibernateTemplate.save(message);
+
                     logger.info("待预测数据,userId = " + userId + ", action = " + sb.toString());
                     logger.info("得到预测值, userId = " + userId + ", result = " + result);
                     try {

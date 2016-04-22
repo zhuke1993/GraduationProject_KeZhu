@@ -3,6 +3,7 @@ package com.zhuke.svmclassifier.controller;
 import com.google.gson.Gson;
 import com.zhuke.smart_home.central.SHConfig;
 import com.zhuke.svmclassifier.config.SystemConfig;
+import com.zhuke.svmclassifier.entity.Message;
 import com.zhuke.svmclassifier.entity.UserInfo;
 import com.zhuke.svmclassifier.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLDecoder;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -118,5 +120,12 @@ public class SVMController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @RequestMapping(value = "/smarthome/messages.do", method = RequestMethod.GET)
+    public void getMessages(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Long userId = Long.parseLong(request.getParameter("userId"));
+        List<Message> messages = SystemConfig.getMessage(userId);
+        response.getWriter().write(new Gson().toJson(messages));
     }
 }
