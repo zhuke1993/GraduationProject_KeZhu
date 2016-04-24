@@ -38,7 +38,7 @@
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="[%t] %d{MM/dd/yyyy HH:mm:ss} %-5p (%c{1}.%M:%L) - %m%n"></param>
         </layout>
-        <param name="File" value="D:/Users/Administrator/Documents/GraduationProject_KeZhu/svm_classifier.log"/>
+        <param name="File" value="/logs/svm_classifier.log"/>
         <param name="DatePattern" value=".yyyy-MM-dd"/>
         <param name="Append" value="false"/>
     </appender>
