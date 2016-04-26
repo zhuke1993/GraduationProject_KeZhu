@@ -4,5 +4,6 @@
     <color name="transparent">#7f000000</color>
     <!-- 透明的 -->
     <color name="white">#ffffff</color>
+    <color name="grey">#999999</color>
 
 </resources>
