@@ -10,4 +10,6 @@ public interface UserInfoService {
     UserInfo login(String name, String password);
 
     void register(UserInfo userInfo);
+
+    public UserInfo getUserInfo(String userName);
 }

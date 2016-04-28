@@ -19,6 +19,8 @@ public class SVMConfig {
 
     public static int loginUserId = 0;
 
+    public static String loginUserName;
+
     /**
      * 特征数
      */

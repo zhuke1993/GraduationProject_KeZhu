@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by ZHUKE on 2016/4/21.
@@ -24,6 +26,7 @@ public class HttpUtil implements Runnable {
 
     public static void login(final String name, final String password) throws IOException {
         HttpUtil httpUtil = new HttpUtil();
+        SVMConfig.loginUserName = name;
         httpUtil.setUrl(SVMConfig.serverLoginURL + "?username=" + URLEncoder.encode(name, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8"));
         Thread thread = new Thread(httpUtil);
         thread.start();
@@ -52,4 +55,5 @@ public class HttpUtil implements Runnable {
             e.printStackTrace();
         }
     }
+
 }

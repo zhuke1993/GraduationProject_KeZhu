@@ -23,7 +23,7 @@
     <script>
         function login() {
             $.ajax({
-                url: "http://zhuke1993.vicp.cc:8080/svmclassifier/login.do",
+                url: "/svmclassifier/login.do",
                 data: {
                     username: $("#name").val(),
                     password: $("#password").val()
@@ -64,6 +64,8 @@
             <br/>
             <div class="am-cf">
                 <input onclick="login()" type="button" name="" value="登 录"
+                       class="am-btn am-btn-primary am-btn-sm am-fl">
+                <input onclick="window.location.href='register.html'" type="button" name="" value="注册"
                        class="am-btn am-btn-primary am-btn-sm am-fl">
             </div>
             <span id="error_message" style="color: red"></span>

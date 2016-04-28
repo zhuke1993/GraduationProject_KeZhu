@@ -49,4 +49,12 @@ public class UserInfoServiceImpl implements UserInfoService, ApplicationContextA
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.appContext = applicationContext;
     }
+
+    public UserInfo getUserInfo(String userName) {
+        List<UserInfo> userInfo = (List<UserInfo>) hibernateTemplate.find("from UserInfo u where u.email = ?", userName);
+        if (userInfo.size() > 0) {
+            return (UserInfo) userInfo.get(0);
+        }
+        return null;
+    }
 }

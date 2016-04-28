@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             loginUser = (TextView) findViewById(R.id.loginUser);
 
             info.setText(getResources().getString(R.string.info) + "\n");
-            loginUser.setText(getResources().getString(R.string.loginUser) + SVMConfig.loginUserId + "\n");
+            loginUser.setText(getResources().getString(R.string.loginUser) + SVMConfig.loginUserName + "\n");
 
             sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 

@@ -5,6 +5,7 @@ import com.zhuke.smart_home.central.SHConfig;
 import com.zhuke.svmclassifier.config.SystemConfig;
 import com.zhuke.svmclassifier.entity.Message;
 import com.zhuke.svmclassifier.entity.UserInfo;
+import com.zhuke.svmclassifier.exceptions.UsernameExistedException;
 import com.zhuke.svmclassifier.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,6 +42,9 @@ public class SVMController {
 
     @Autowired
     private ThreadPoolExecutor threadPoolExecutor;
+
+    @Autowired
+    private RegisterLoginService registerLoginService;
 
     @RequestMapping("/predict/start.do")
     public void startPredict(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -95,19 +99,23 @@ public class SVMController {
     @RequestMapping("/register.do")
     public void register(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            String name = request.getParameter("name");
+            String name = request.getParameter("email");
             String password = request.getParameter("password");
 
             UserInfo userInfo = new UserInfo();
             userInfo.setCreatedOn(new Date());
             userInfo.setUserName(name);
             userInfo.setPassword(password);
+            userInfo.setEmail(name);
 
-            userInfoService.register(userInfo);
+            registerLoginService.register(userInfo);
             response.getWriter().print("OK");
+        } catch (UsernameExistedException e) {
+            e.printStackTrace();
+            response.getWriter().print(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            response.getWriter().print("FAILED");
+            response.getWriter().print("服务器错误");
         }
     }
 
@@ -130,7 +138,7 @@ public class SVMController {
             response.getWriter().write(new Gson().toJson(messages));
         } catch (Exception e) {
             e.printStackTrace();
-            response.getWriter().write("服务器繁忙,errMsg=" + e.getMessage()+"\n请退出重新登陆。");
+            response.getWriter().write("服务器繁忙,errMsg=" + e.getMessage() + "\n请退出重新登陆。");
         }
     }
 }

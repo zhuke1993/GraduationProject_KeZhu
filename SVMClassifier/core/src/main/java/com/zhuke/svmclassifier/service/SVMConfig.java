@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.Properties;
 
 /**
@@ -155,7 +155,7 @@ public class SVMConfig {
         Properties properties = new Properties();
         try {
             if (userId != 0) {
-                properties.load(new FileInputStream(SVMConfig.class.getResource("/").getFile() + "svm_classifier.properties"));
+                properties.load(new FileInputStream(URLDecoder.decode(SVMConfig.class.getResource("/").getFile() + "svm_classifier.properties", "UTF-8")));
                 //properties.load(new FileInputStream("D:\\Users\\Administrator\\Documents\\GraduationProject_KeZhu\\SVMClassifier\\web\\target\\web\\WEB-INF\\classes\\svm_classifier.properties"));
 
                 REMOUT_URL = properties.getProperty("conf.REMOUT_URL");
@@ -176,7 +176,7 @@ public class SVMConfig {
                 TO_PERDICT = new double[(R - L) * FEATURE_NUM];
 
                 //初始化文件夹以及文件
-                File modelFile = new File(SVMConfig.class.getResource("/").getFile() + "/" + MODELFILE_PATH);
+                File modelFile = new File(URLDecoder.decode(SVMConfig.class.getResource("/").getFile() + "/" + MODELFILE_PATH, "UTF-8"));
 
                 try {
                     // 如果这是一个文件夹且不存在的话，则进行新建文件夹
@@ -189,18 +189,13 @@ public class SVMConfig {
                 svm_problem prob = dataSource2SvmProblemService.readFromDB(userId);
                 if (prob.l != 0) {
                     MODEL = svm.svm_train(prob, SVMParam.customize(C, G));
-                    svm.svm_save_model(this.getClass().getResource("/").getFile() + MODELFILE_PATH + "_" + userId, MODEL);
+                    svm.svm_save_model(URLDecoder.decode(this.getClass().getResource("/").getFile() + MODELFILE_PATH + "_" + userId, "UTF-8"), MODEL);
                 }
                 logger.info("Successed to initiation system config for userId = " + userId);
             }
         } catch (IOException e) {
             logger.error("Field to load configuration file.", e);
         }
-    }
-
-    public void main(String[] args) throws FileNotFoundException {
-        System.out.println(SVMConfig.class.getResource("/").getFile());
-        FileInputStream fi = new FileInputStream(SVMConfig.class.getResource("/").getFile() + "/svm_classifier.properties");
     }
 
 }
