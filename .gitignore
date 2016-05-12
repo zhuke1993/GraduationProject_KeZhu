@@ -27,3 +27,6 @@ test-output/*
 Servers/
 out
 out/*
+
+*.tmp
+*.~*
