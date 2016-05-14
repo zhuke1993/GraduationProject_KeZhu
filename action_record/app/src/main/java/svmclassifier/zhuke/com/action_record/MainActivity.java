@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        SVMConfig.init();
         Intent intent = new Intent(this, LoginActivity.class);
         if (SVMConfig.loginUserId == 0) {
             startActivity(intent);

@@ -23,11 +23,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
-import android.widget.TextView;
 import android.widget.Toast;
 
-public class LoginActivity extends Activity implements OnClickListener, OnDismissListener {
-    protected static final String TAG = "LoginActivity";
+public class RegisterActivity extends Activity implements OnClickListener, OnDismissListener {
+    protected static final String TAG = "RegisterActivity";
     private LinearLayout mLoginLinearLayout; // 登录内容的容器
     private LinearLayout mUserIdLinearLayout; // 将下拉弹出窗口在此容器下方显示
     private Animation mTranslate; // 位移动画
@@ -35,34 +34,28 @@ public class LoginActivity extends Activity implements OnClickListener, OnDismis
     private EditText mIdEditText; // 登录ID编辑框
     private EditText mPwdEditText; // 登录密码编辑框
     private ImageView mMoreUser; // 下拉图标
-    private Button mLoginButton; // 登录按钮
+    private Button registerBtn; // 登录按钮
     private ImageView mLoginMoreUserView; // 弹出下拉弹出窗的按钮
     private String mIdString;
     private String mPwdString;
     private ListView mUserIdListView; // 下拉弹出窗显示的ListView对象
     private PopupWindow mPop; // 下拉弹出窗
-    private TextView register;
+    private EditText rePwdText;
+    private String rePwdString;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_register);
         initView();
         setListener();
         mLoginLinearLayout.startAnimation(mTranslate); // Y轴水平移动
+
 
         LinearLayout parent = (LinearLayout) getLayoutInflater().inflate(
                 R.layout.userifo_listview, null);
         mUserIdListView = (ListView) parent.findViewById(android.R.id.list);
         parent.removeView(mUserIdListView); // 必须脱离父子关系,不然会报错
-
-        register.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     private void setListener() {
@@ -94,20 +87,34 @@ public class LoginActivity extends Activity implements OnClickListener, OnDismis
             public void afterTextChanged(Editable s) {
             }
         });
-        mLoginButton.setOnClickListener(this);
+        rePwdText.addTextChangedListener(new TextWatcher() {
+
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+                rePwdString = s.toString();
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
+
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        registerBtn.setOnClickListener(this);
         mLoginMoreUserView.setOnClickListener(this);
     }
 
     private void initView() {
-        mIdEditText = (EditText) findViewById(R.id.login_edtId);
-        mPwdEditText = (EditText) findViewById(R.id.login_edtPwd);
+        mIdEditText = (EditText) findViewById(R.id.register_edtId);
+        mPwdEditText = (EditText) findViewById(R.id.register_edtPwd);
         mMoreUser = (ImageView) findViewById(R.id.login_more_user);
-        mLoginButton = (Button) findViewById(R.id.login_btnLogin);
+        registerBtn = (Button) findViewById(R.id.register_btnRegister);
         mLoginMoreUserView = (ImageView) findViewById(R.id.login_more_user);
         mLoginLinearLayout = (LinearLayout) findViewById(R.id.login_linearLayout);
         mUserIdLinearLayout = (LinearLayout) findViewById(R.id.userId_LinearLayout);
         mTranslate = AnimationUtils.loadAnimation(this, R.anim.my_translate); // 初始化动画对象
-        register = (TextView) findViewById(R.id.login_register);
+        rePwdText = (EditText) findViewById(R.id.register_edtRePwd);
         initLoginingDlg();
     }
 
@@ -170,34 +177,33 @@ public class LoginActivity extends Activity implements OnClickListener, OnDismis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.login_btnLogin:
+            case R.id.register_btnRegister:
                 // 启动登录
-                showLoginingDlg(); // 显示"正在登录"对话框,因为此Demo没有登录到web服务器,所以效果可能看不出.可以结合情况使用
                 Log.i(TAG, mIdString + "  " + mPwdString);
                 if (mIdString == null || mIdString.equals("")) { // 账号为空时
-                    Toast.makeText(LoginActivity.this, "请输入账号", Toast.LENGTH_SHORT)
+                    Toast.makeText(RegisterActivity.this, "请输入账号", Toast.LENGTH_SHORT)
                             .show();
                 } else if (mPwdString == null || mPwdString.equals("")) {// 密码为空时
-                    Toast.makeText(LoginActivity.this, "请输入密码", Toast.LENGTH_SHORT)
+                    Toast.makeText(RegisterActivity.this, "请输入密码", Toast.LENGTH_SHORT)
+                            .show();
+                } else if (rePwdString == null || rePwdString.equals("")) {
+                    Toast.makeText(RegisterActivity.this, "请重复输入密码", Toast.LENGTH_SHORT)
+                            .show();
+                } else if (!rePwdString.equals(mPwdString)) {
+                    Toast.makeText(RegisterActivity.this, "两次输入的密码不一致", Toast.LENGTH_SHORT)
                             .show();
                 } else {// 账号和密码都不为空时
                     boolean mIsSave = true;
                     try {
-                        HttpUtil.login(mIdString, mPwdString);
+                        HttpUtil.register(mIdString, mPwdString);
                         Thread.sleep(1000);
-                        showLoginingDlg();
-                        if (SVMConfig.loginUserId != 0) {
-                            closeLoginingDlg();// 关闭对话框
-                            Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent();
-                            intent.setClass(this, MainActivity.class);
-                            startActivity(intent);
-                        } else {
-                            closeLoginingDlg();// 关闭对话框
-                            Toast.makeText(this, "登录失败", Toast.LENGTH_SHORT).show();
-                        }
+                        Toast.makeText(this, "注册成功", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent();
+                        intent.setClass(this, LoginActivity.class);
+                        startActivity(intent);
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Toast.makeText(this, "注册失败", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;

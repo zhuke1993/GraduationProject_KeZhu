@@ -39,7 +39,7 @@
                 <!-- android:ems="10"表示EditText内最多只显示10个字符，超出不显示 -->
                 <!-- android:singleLine="true"表示不能全部显示时，后面用“…”来表示 -->
                 <EditText
-                    android:id="@+id/login_edtId"
+                    android:id="@+id/register_edtId"
                     android:layout_width="0dp"
                     android:layout_height="44dp"
                     android:layout_weight="1"
@@ -71,7 +71,7 @@
                 android:background="#CACDD1" />
 
             <EditText
-                android:id="@+id/login_edtPwd"
+                android:id="@+id/register_edtPwd"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:background="@null"
@@ -82,13 +82,29 @@
                 android:singleLine="true"
                 android:textColorHint="#999999"
                 android:textSize="18sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#CACDD1" />
+            <EditText
+                android:id="@+id/register_edtRePwd"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@null"
+                android:hint="@string/rePwdtxthint"
+                android:inputType="textPassword"
+                android:paddingLeft="15dp"
+                android:paddingRight="0dp"
+                android:singleLine="true"
+                android:textColorHint="#999999"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <Button
-            android:id="@+id/login_btnLogin"
+            android:id="@+id/register_btnRegister"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:text="@string/loginbtntext"
+            android:text="@string/register"
             android:textColor="#000000"
             android:textSize="19sp"
             android:layout_marginTop="16dp"/>
@@ -99,16 +115,5 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical" />
-
-    <TextView
-        android:id="@+id/login_register"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="15dp"
-        android:text="@string/register"
-        android:textColor="#0079FF"
-        android:textSize="18sp"
-        android:layout_weight="1" />
 
 </LinearLayout>

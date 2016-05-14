@@ -3,6 +3,7 @@ package svmclassifier.zhuke.com.action_record;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -56,4 +57,10 @@ public class HttpUtil implements Runnable {
         }
     }
 
+    public static void register(String email, String password) throws UnsupportedEncodingException {
+        HttpUtil httpUtil = new HttpUtil();
+        httpUtil.setUrl(SVMConfig.serverRegisterURL + "?email=" + URLEncoder.encode(email, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8"));
+        Thread thread = new Thread(httpUtil);
+        thread.start();
+    }
 }

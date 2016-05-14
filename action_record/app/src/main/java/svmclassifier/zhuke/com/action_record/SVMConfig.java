@@ -13,6 +13,8 @@ public class SVMConfig {
 
     public static String serverLoginURL = "http://zhuke1993.vicp.cc:8081/svmclassifier/login.do";
 
+    public static String serverRegisterURL = "http://zhuke1993.vicp.cc:8081/svmclassifier/register.do";
+
     static long threadTime = 100;
 
     public static boolean isUpdateBuffer = false;
@@ -63,4 +65,11 @@ public class SVMConfig {
      * 数组中的每一行的数据都已经进行了归一化处理，且数据格式为ax ay az bx by bz
      */
     public static double[][] ACTION_TEMP = new double[SVMConfig.ACTION_TO_RECORD][SVMConfig.FEATURE_NUM];
+
+    public static String action_f = "/mnt/sdcard/action_record/action.txt";
+    public static String appDir = "/mnt/sdcard/action_record";
+
+    public static void init() {
+        FileUtil.iniFile();
+    }
 }

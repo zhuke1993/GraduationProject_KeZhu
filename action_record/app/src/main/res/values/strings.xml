@@ -4,8 +4,9 @@
     <string name="app_name">动作采集</string>
     <string name="idtxthint">用户名</string>
     <string name="pwdtxthint">密码</string>
+    <string name="rePwdtxthint">重复密码</string>
     <string name="loginbtntext">登录</string>
-    <string name="forgot_pwd">忘记密码？</string>
+    <string name="register">注册</string>
     <string name="loading">正在登录</string>
     <string name="loginUser">用户已登录,userName=</string>
     <string name="info">动作信息展示</string>

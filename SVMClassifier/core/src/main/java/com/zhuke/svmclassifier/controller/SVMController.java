@@ -99,8 +99,8 @@ public class SVMController {
     @RequestMapping("/register.do")
     public void register(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            String name = request.getParameter("email");
-            String password = request.getParameter("password");
+            String name = URLDecoder.decode(request.getParameter("email"), "UTF-8");
+            String password = URLDecoder.decode(request.getParameter("password"), "UTF-8");
 
             UserInfo userInfo = new UserInfo();
             userInfo.setCreatedOn(new Date());

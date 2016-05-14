@@ -79,6 +79,8 @@ public class ActionSender implements Runnable {
     public static void updateBuffer() throws InterruptedException {
         // 将新接收到的数据存入到temp数组的第temp_state行
         String s = ActionRecorder.getCurrentAction();
+        // 数据存放至本地文件
+        FileUtil.addStr2File(SVMConfig.action_f, s + "\n");
         double[] d = actionNormalize(s);
         System.out.println("得到状态值" + s);
         if (d != null) {
