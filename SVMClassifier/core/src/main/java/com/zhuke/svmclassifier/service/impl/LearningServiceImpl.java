@@ -19,6 +19,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -68,7 +69,7 @@ public class LearningServiceImpl implements LearningService {
                     //对model进行再次训练
                     svm_problem prob = dataSource2SvmProblemService.readFromDB(userId);
                     svmConfig.MODEL = svm.svm_train(prob, SVMParam.customize(svmConfig.C, svmConfig.G));
-                    svm.svm_save_model(this.getClass().getResource("/").getFile() + svmConfig.MODELFILE_PATH + "_" + userId, svmConfig.MODEL);
+                    svm.svm_save_model(URLDecoder.decode(this.getClass().getResource("/").getFile() + svmConfig.MODELFILE_PATH + "_" + userId, "UTF-8"), svmConfig.MODEL);
                     logger.info("SVM学习结束，new model for userId : " + userId + " = " + svmConfig.MODEL.toString());
                 } catch (IOException e) {
                     logger.error("学习线程发生异常", e);
