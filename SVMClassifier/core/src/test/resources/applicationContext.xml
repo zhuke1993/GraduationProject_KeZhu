@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--<import resource="spring-security-config.xml"/>-->
+    <import resource="spring-mvc-servlet.xml"/>
+
+    <!--配置包扫描-->
+    <context:annotation-config/>
+    <context:component-scan base-package="com.zhuke.svmclassifier.service"/>
+
+    <!--配置文件位置-->
+    <context:property-placeholder location="classpath:svm_classifier.properties"/>
+
+    <!--配置数据源-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maxActive" value="${jdbc.maxActive}"/>
+        <property name="maxIdle" value="${jdbc.maxIdle}"/>
+        <property name="maxWait" value="${jdbc.maxWait}"/>
+        <property name="defaultAutoCommit" value="false"/>
+        <property name="validationQuery" value="select 1"/>
+        <property name="testOnBorrow" value="true"/>
+    </bean>
+
+    <bean id="hibernateDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maxActive" value="${jdbc.maxActive}"/>
+        <property name="maxIdle" value="${jdbc.maxIdle}"/>
+        <property name="maxWait" value="${jdbc.maxWait}"/>
+        <property name="defaultAutoCommit" value="false"/>
+        <property name="validationQuery" value="select 1"/>
+        <property name="testOnBorrow" value="true"/>
+    </bean>
+
+
+    <!--配置SpringJDBC-->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--配置hibernate-->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="hibernateProperties">
+            <props>
+                <!-- web项目启动时是否更新表结构 -->
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <!-- 系统使用的数据库方言，也就是使用的数据库类型 -->
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <!-- 是否打印Hibernate生成的SQL到控制台 -->
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <!-- 是否格式化打印出来的SQL -->
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+            </props>
+        </property>
+        <!--自动扫描注解方式配置的hibernate类文件-->
+        <property name="packagesToScan">
+            <list>
+                <value>com.zhuke.svmclassifier.entity</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--配置hibernateTemplate，用于完成数据操作-->
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate5.HibernateTemplate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!--配置hibernate事务管理器-->
+    <bean id="hibernateTransactionMananger" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!--对标注@Transaction注解的bean进行事务管理-->
+    <tx:annotation-driven transaction-manager="hibernateTransactionMananger"/>
+
+    <!--配置redis-->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="${redis.maxTotal}"/>
+        <property name="maxIdle" value="${redis.maxIdle}"/>
+        <property name="minIdle" value="${redis.minIdle}"/>
+    </bean>
+
+
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="poolConfig" ref="jedisPoolConfig"/>
+        <property name="hostName" value="${redis.host}"/>
+        <property name="port" value="${redis.port}"/>
+        <property name="password" value="${redis.password}"/>
+    </bean>
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory"/>
+    </bean>
+
+
+    <!--线程池管理-->
+    <bean id="threadPoolExecutor" class="java.util.concurrent.ThreadPoolExecutor">
+        <constructor-arg type="int" value="4"/>
+        <constructor-arg type="int" value="4"/>
+        <constructor-arg type="long" value="6000"/>
+        <constructor-arg type="java.util.concurrent.TimeUnit" value="MILLISECONDS"/>
+        <constructor-arg ref="workQueue"/>
+    </bean>
+    <bean id="workQueue" class="java.util.concurrent.ArrayBlockingQueue">
+        <constructor-arg type="int" value="5"/>
+    </bean>
+
+</beans>

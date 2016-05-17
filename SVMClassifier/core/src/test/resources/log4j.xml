@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+    <root>
+        <priority value="info"/>
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="Daily_File_Appender"/>
+    </root>
+
+    <appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+        <!--各种格式化说明如下：
+            %p：输出日志信息的优先级，即DEBUG，INFO，WARN，ERROR，FATAL。
+            %d：输出日志时间点的日期或时间，默认格式为ISO8601，也可以在其后指定格式，如：%d{yyyy/MM/dd HH:mm:ss,SSS}。
+            %r：输出自应用程序启动到输出该log信息耗费的毫秒数。
+            %t：输出产生该日志事件的线程名。
+            %l：输出日志事件的发生位置，相当于%c.%M(%F:%L)的组合，包括类全名、方法、文件名以及在代码中的行数。例如：test.TestLog4j.main(TestLog4j.java:10)。
+            %c：输出日志信息所属的类目，通常就是所在类的全名。
+            %M：输出产生日志信息的方法名。
+            %F：输出日志消息产生时所在的文件名称。
+            %L:：输出代码中的行号。
+            %m:：输出代码中指定的具体日志信息。
+            %n：输出一个回车换行符，Windows平台为”\r\n”，Unix平台为”\n”。
+            %x：输出和当前线程相关联的NDC(嵌套诊断环境)，尤其用到像java servlets这样的多客户多线程的应用中。
+            %%：输出一个”%”字符。
+            另外，还可以在%与格式字符之间加上修饰符来控制其最小长度、最大长度、和文本的对齐方式。如：
+
+            c：指定输出category的名称，最小的长度是20，如果category的名称长度小于20的话，默认的情况下右对齐。
+            %-20c：”-“号表示左对齐。
+            %.30c：指定输出category的名称，最大的长度是30，如果category的名称长度大于30的话，就会将左边多出的字符截掉，但小于30的话也不会补空格。-->
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%t] %d{MM/dd/yyyy HH:mm:ss} %-5p (%c{1}.%M:%L) - %m%n"></param>
+        </layout>
+    </appender>
+
+    <appender name="Daily_File_Appender" class="org.apache.log4j.DailyRollingFileAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%t] %d{MM/dd/yyyy HH:mm:ss} %-5p (%c{1}.%M:%L) - %m%n"></param>
+        </layout>
+        <param name="File" value="/logs/svm_classifier.log"/>
+        <param name="DatePattern" value=".yyyy-MM-dd"/>
+        <param name="Append" value="false"/>
+    </appender>
+
+</log4j:configuration>

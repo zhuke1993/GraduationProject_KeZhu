@@ -49,8 +49,50 @@ public class DataSource2SvmProblemServiceImpl implements DataSource2SvmProblemSe
      * @return 得到的svm_problem
      * @throws IOException
      */
+    public svm_problem readFromDB(Long userId, int limit, int size) throws IOException {
+        List<ActionRecord> actionRecordList1 = (List<ActionRecord>) hibernateTemplate.find("from ActionRecord a where a.userId = ?", userId);
+        List<ActionRecord> actionRecordList = new ArrayList<ActionRecord>();
+        for (int i = 0; i < size; i++) {
+            actionRecordList.add(actionRecordList1.get(limit + i));
+        }
+        svm_problem svmProblem = new svm_problem();
+        ArrayList<svm_node[]> X = new ArrayList<svm_node[]>();
+        ArrayList<Double> Y = new ArrayList<Double>();
+
+        for (int i = 0; i < actionRecordList.size(); i++) {
+            String action = actionRecordList.get(i).getAction();
+            StringTokenizer st = new StringTokenizer(action, " ");
+            int countTockens = st.countTokens();
+
+            double label = atof(st.nextToken());
+            Y.add(i, label);
+
+            svm_node[] svmNodes = new svm_node[countTockens - 1];
+
+            for (int j = 1; j < countTockens; j++) {
+                svm_node node = new svm_node();
+                String nodeStr = st.nextToken();//<index>:<value>
+                node.index = Integer.parseInt(nodeStr.split(":")[0]);
+                node.value = Double.parseDouble(nodeStr.split(":")[1]);
+                svmNodes[j - 1] = node;
+            }
+            X.add(i, svmNodes);
+        }
+        svmProblem.l = Y.size();
+        svmProblem.x = new svm_node[Y.size()][];
+        svmProblem.y = new double[Y.size()];
+        for (int i = 0; i < Y.size(); i++) {
+            svmProblem.x[i] = X.get(i);
+            svmProblem.y[i] = Y.get(i);
+        }
+
+        return svmProblem;
+
+    }
+
+
     public svm_problem readFromDB(Long userId) throws IOException {
-        List<ActionRecord> actionRecordList = (List<ActionRecord>) hibernateTemplate.find("from ActionRecord a where a.userId = ?", userId);
+        List<ActionRecord> actionRecordList = (List<ActionRecord>) hibernateTemplate.find("from ActionRecord a where a.userId = ? ", userId);
 
         svm_problem svmProblem = new svm_problem();
         ArrayList<svm_node[]> X = new ArrayList<svm_node[]>();
