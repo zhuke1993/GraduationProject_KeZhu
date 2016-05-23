@@ -89,8 +89,8 @@ public class PSOService {
      * 开始PSO算法
      */
     public void pso() throws Exception {
-        this.probTrain = dataSource2SvmProblemService.readFromDB(1L, 0, 111);
-        this.probTest = dataSource2SvmProblemService.readFromDB(1L, 111, 20);
+        this.probTrain = dataSource2SvmProblemService.readFromDB(1L, 0, 70);
+        this.probTest = dataSource2SvmProblemService.readFromDB(1L, 71, 60);
         init();
         for (int j = 0; j < maxgen; j++) {
             updateBest();
