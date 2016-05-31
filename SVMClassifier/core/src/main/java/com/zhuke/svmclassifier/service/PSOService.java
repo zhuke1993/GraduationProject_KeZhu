@@ -33,7 +33,7 @@ public class PSOService {
     private double c1 = 2;//粒子的个体学习因子
     private double c2 = 2;//粒子的社会学习因子
     private int maxgen = 500;//最大迭代次数
-    private int populationSize = 50;//种群规模
+    private int populationSize = 500;//种群规模
 
     private double[] vLimitation = {-2, 2};//速度限制
     private double[][] position = new double[populationSize][n];//粒子的当前位置
@@ -89,8 +89,8 @@ public class PSOService {
      * 开始PSO算法
      */
     public void pso() throws Exception {
-        this.probTrain = dataSource2SvmProblemService.readFromDB(1L, 0, 70);
-        this.probTest = dataSource2SvmProblemService.readFromDB(1L, 71, 60);
+        this.probTrain = dataSource2SvmProblemService.readFromDB(1L, 0, 90);
+        this.probTest = dataSource2SvmProblemService.readFromDB(1L, 91, 40);
         init();
         for (int j = 0; j < maxgen; j++) {
             updateBest();
